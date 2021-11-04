@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pokemon_image_iv"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginVertical="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="12dp"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/pokemon_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        tools:text="Pikachu"
+        android:textSize="18sp"
+        android:textColor="@color/black"/>
+</androidx.appcompat.widget.LinearLayoutCompat>
