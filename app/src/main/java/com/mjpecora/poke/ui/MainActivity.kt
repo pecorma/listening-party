@@ -1,15 +1,18 @@
-package com.mjpecora.poke
+package com.mjpecora.poke.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
-import androidx.recyclerview.widget.GridLayoutManager
+import com.google.accompanist.insets.ProvideWindowInsets
 import com.mjpecora.poke.databinding.ActivityMainBinding
 import com.mjpecora.poke.model.remote.PokemonDetail
 import com.mjpecora.poke.ui.adapter.PokemonListAdapter
 import com.mjpecora.poke.ui.adapter.PokemonLoadStateAdapter
+import com.mjpecora.poke.ui.theme.PokeTheme
 import com.mjpecora.poke.ui.viewmodel.PokemonViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.Flow
@@ -17,16 +20,19 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
     private val viewModel: PokemonViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        with(viewModel) {
-            binding.bindState(this.pagingDataFlow)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        setContent {
+            PokeTheme {
+                ProvideWindowInsets {
+
+                }
+            }
         }
     }
 
