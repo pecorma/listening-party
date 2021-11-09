@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PokeTheme {
                 ProvideWindowInsets {
-
+                    PokeApp()
                 }
             }
         }

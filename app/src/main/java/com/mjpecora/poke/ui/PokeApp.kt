@@ -9,8 +9,10 @@
 package com.mjpecora.poke.ui
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.mjpecora.poke.ui.home.Home
 
 @Composable
 fun PokeApp(
@@ -21,7 +23,7 @@ fun PokeApp(
         startDestination = Screen.Home.route
     ) {
         composable(Screen.Home.route) { navBackStackEntry ->
-            Home
+            Home()
         }
     }
 }

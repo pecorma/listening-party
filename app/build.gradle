@@ -32,6 +32,8 @@ android {
     }
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -46,6 +48,11 @@ android {
 
     buildFeatures {
         viewBinding true
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion "1.1.0-beta02"
     }
 }
 
@@ -59,6 +66,7 @@ dependencies {
     // dependency injection
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0-alpha03'
 
     // lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
@@ -95,6 +103,8 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.4.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0'
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.5"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
