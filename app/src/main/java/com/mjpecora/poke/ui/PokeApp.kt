@@ -23,7 +23,7 @@ fun PokeApp(
         startDestination = Screen.Home.route
     ) {
         composable(Screen.Home.route) { navBackStackEntry ->
-            Home()
+            Home(hiltViewModel())
         }
     }
 }

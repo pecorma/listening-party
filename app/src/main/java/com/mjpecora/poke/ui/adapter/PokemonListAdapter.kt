@@ -16,7 +16,6 @@ import androidx.paging.LoadStateAdapter
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mjpecora.poke.R
 import com.mjpecora.poke.databinding.LayoutLoadingFooterBinding
 import com.mjpecora.poke.databinding.LayoutPokemonSimpleItemBinding
@@ -82,11 +81,6 @@ class PokemonListAdapter :
 
         fun bind(detail: PokemonDetail?) {
             binding.pokemonNameTv.text = detail?.name ?: "Probably pikachu, amirite?"
-            Glide.with(binding.pokemonImageIv)
-                .load(detail?.sprites?.otherArtwork?.officialArtwork?.frontDefaultUrl)
-                .placeholder(R.drawable.ic_poke_ball)
-                .fitCenter()
-                .into(binding.pokemonImageIv)
         }
 
         companion object {

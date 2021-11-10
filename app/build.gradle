@@ -44,6 +44,7 @@ android {
         freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
         freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.FlowPreview"
         freeCompilerArgs += "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi"
+        freeCompilerArgs += "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi"
     }
 
     buildFeatures {
@@ -83,8 +84,7 @@ dependencies {
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$kotlin_serialization_converter_version"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlin_serialization_version"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:$kotlin_serialization_version"
-    implementation "com.github.bumptech.glide:glide:$glide_version"
-    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    implementation("io.coil-kt:coil-compose:1.4.0")
 
     // threading
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
