@@ -9,7 +9,6 @@
 package com.mjpecora.poke.api
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.mjpecora.poke.model.remote.Pokemon
 import com.mjpecora.poke.model.remote.PokemonDetail
 import com.mjpecora.poke.model.remote.PokemonResponse
 import kotlinx.serialization.json.Json

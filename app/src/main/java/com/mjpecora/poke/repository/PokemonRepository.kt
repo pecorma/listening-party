@@ -12,14 +12,14 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.mjpecora.poke.api.PokeService
-import com.mjpecora.poke.model.remote.PokemonDetail
+import com.mjpecora.poke.model.remote.Pokemon
 import com.mjpecora.poke.ui.datasource.PokemonPagingSource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class PokemonRepository @Inject constructor(private val service: PokeService)  {
 
-    fun fetchPokemonList(): Flow<PagingData<PokemonDetail>> {
+    fun fetchPokemonList(): Flow<PagingData<Pokemon>> {
         return Pager(
             config = PagingConfig(
                 pageSize = PokeService.PAGING_LIMIT,

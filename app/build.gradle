@@ -45,6 +45,7 @@ android {
         freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.FlowPreview"
         freeCompilerArgs += "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi"
         freeCompilerArgs += "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi"
+        freeCompilerArgs += "-Xopt-in=coil.annotation.ExperimentalCoilApi"
     }
 
     buildFeatures {
@@ -91,6 +92,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
 
     // ui
+    implementation "androidx.palette:palette:1.0.0"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
     implementation "androidx.paging:paging-compose:1.0.0-alpha14"
     implementation 'com.google.accompanist:accompanist-insets:0.21.1-beta'

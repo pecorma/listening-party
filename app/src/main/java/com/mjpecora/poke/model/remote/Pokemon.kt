@@ -8,13 +8,21 @@
 */
 package com.mjpecora.poke.model.remote
 
+import com.mjpecora.poke.ui.theme.PokeColors
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable data class Pokemon(
     val name: String = "",
-    val url: String = ""
-)
+    val url: String = "",
+    var dominantColor: Int = PokeColors.background.value.toInt()
+) {
+    val officialArtworkUrl: String
+        get() {
+            val index = url.split('/').dropLast(1).last()
+            return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$index.png"
+        }
+}
 
 @Serializable data class PokemonResponse(@SerialName("results") val list: List<Pokemon>)
 

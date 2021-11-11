@@ -8,15 +8,19 @@
 */
 package com.mjpecora.poke.ui.theme
 
+import androidx.compose.foundation.gestures.LocalOverScrollConfiguration
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 
 @Composable
 fun PokeTheme(content: @Composable () -> Unit) {
-    MaterialTheme(
-        colors = PokeColors,
-        content = content,
-        typography = PokeTypography,
-        shapes = PokeShapes
-    )
+    CompositionLocalProvider(LocalOverScrollConfiguration provides null) {
+        MaterialTheme(
+            colors = PokeColors,
+            content = content,
+            typography = PokeTypography,
+            shapes = PokeShapes
+        )
+    }
 }

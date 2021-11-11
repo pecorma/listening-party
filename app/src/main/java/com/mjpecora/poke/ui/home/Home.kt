@@ -16,13 +16,21 @@ import androidx.compose.material.Card
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.palette.graphics.Palette
+import coil.ImageLoader
+import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
-import com.mjpecora.poke.model.remote.PokemonDetail
+import coil.request.ImageRequest
+import com.mjpecora.poke.model.remote.Pokemon
+import com.mjpecora.poke.ui.theme.PokeColors
 import com.mjpecora.poke.ui.theme.PokeShapes
 import com.mjpecora.poke.ui.theme.PokeTheme
 import com.mjpecora.poke.ui.viewmodel.PokemonViewModel
@@ -40,29 +48,37 @@ fun Home(
 }
 
 @Composable
-fun PokemonGrid(pagingDataFlow: Flow<PagingData<PokemonDetail>>) {
+fun PokemonGrid(pagingDataFlow: Flow<PagingData<Pokemon>>) {
     val items = pagingDataFlow.collectAsLazyPagingItems()
-    LazyVerticalGrid(cells = GridCells.Fixed(2)) {
+    LazyVerticalGrid(
+        cells = GridCells.Fixed(2),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(8.dp)
+    ) {
         items(items.itemCount) { index ->
-            PokemonCard(detail = items[index])
+            PokemonCard(rememberImagePainter(data = items[index]?.officialArtworkUrl))
         }
     }
 }
 
+
 @Composable
-fun PokemonCard(detail: PokemonDetail?) {
-    Column(
-        Modifier.height(200.dp).fillMaxWidth()) {
-            Card(shape = PokeShapes.medium) {
-                val imageUrl = detail?.sprites?.otherArtwork?.officialArtwork?.frontDefaultUrl
-                Image(
-                    painter = rememberImagePainter(data = imageUrl),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
+fun PokemonCard(painter: ImagePainter) {
+    Card(
+        modifier = Modifier
+            .height(200.dp)
+            .fillMaxWidth(),
+        shape = PokeShapes.medium
+    ) {
+        Image(
+            painter = painter,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
+
 
 @Preview
 @Composable

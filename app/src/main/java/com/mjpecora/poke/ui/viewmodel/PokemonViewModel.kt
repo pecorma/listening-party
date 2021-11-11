@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.mjpecora.poke.model.remote.PokemonDetail
+import com.mjpecora.poke.model.remote.Pokemon
 import com.mjpecora.poke.repository.PokemonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +30,7 @@ import javax.inject.Inject
 class PokemonViewModel @Inject constructor(private val repo: PokemonRepository) : ViewModel() {
 
     val accept: (UiAction) -> Unit
-    val pagingDataFlow: Flow<PagingData<PokemonDetail>>
+    val pagingDataFlow: Flow<PagingData<Pokemon>>
 
     init {
         val actionStateFlow = MutableSharedFlow<UiAction>()
@@ -47,7 +47,6 @@ class PokemonViewModel @Inject constructor(private val repo: PokemonRepository) 
                 repo.fetchPokemonList()
             }
             .cachedIn(viewModelScope)
-
 
         accept = { action ->
             viewModelScope.launch { actionStateFlow.emit(action) }
