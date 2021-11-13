@@ -15,20 +15,16 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.material.Card
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.palette.graphics.Palette
-import coil.ImageLoader
-import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
-import coil.request.ImageRequest
 import com.mjpecora.poke.model.remote.Pokemon
 import com.mjpecora.poke.ui.theme.PokeColors
 import com.mjpecora.poke.ui.theme.PokeShapes
@@ -41,7 +37,7 @@ import kotlinx.coroutines.flow.Flow
 fun Home(
     viewModel: PokemonViewModel = viewModel()
 ) {
-    val pagingDataFlow = viewModel.pagingDataFlow
+    val pagingDataFlow = viewModel.getPokemon()
     Surface(Modifier.fillMaxSize()) {
         PokemonGrid(pagingDataFlow = pagingDataFlow)
     }
@@ -57,28 +53,27 @@ fun PokemonGrid(pagingDataFlow: Flow<PagingData<Pokemon>>) {
         contentPadding = PaddingValues(8.dp)
     ) {
         items(items.itemCount) { index ->
-            PokemonCard(rememberImagePainter(data = items[index]?.officialArtworkUrl))
+            PokemonCard(items[index], PokeColors.surface.toArgb())
         }
     }
 }
 
-
 @Composable
-fun PokemonCard(painter: ImagePainter) {
+fun PokemonCard(pokemon: Pokemon?, dominantColor: Int) {
     Card(
         modifier = Modifier
             .height(200.dp)
             .fillMaxWidth(),
-        shape = PokeShapes.medium
+        shape = PokeShapes.medium,
+        backgroundColor = Color(dominantColor)
     ) {
         Image(
-            painter = painter,
+            painter = rememberImagePainter(data = pokemon?.officialArtworkUrl),
             contentDescription = null,
             modifier = Modifier.fillMaxSize()
         )
     }
 }
-
 
 @Preview
 @Composable
