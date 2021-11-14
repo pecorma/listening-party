@@ -1,12 +1,8 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+
 plugins {
     kotlin("android") apply false
-}
-
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
+    id("com.github.ben-manes.versions") version "0.39.0"
 }
 
 allprojects {
@@ -16,6 +12,21 @@ allprojects {
     }
 }
 
-tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
+subprojects {
+    apply {
+        plugin("com.github.ben-manes.versions")
+    }
+}
+
+tasks {
+    register("clean", Delete::class) {
+        delete(rootProject.buildDir)
+    }
+
+    withType<DependencyUpdatesTask> {
+        checkForGradleUpdate = true
+        outputFormatter = "json"
+        outputDir = "build/dependencyUpdates"
+        reportfileName = "report"
+    }
 }

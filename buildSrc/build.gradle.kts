@@ -1,10 +1,10 @@
+plugins {
+    `kotlin-dsl`
+}
+
 repositories {
     mavenCentral()
     google()
-}
-
-plugins {
-    `kotlin-dsl`
 }
 
 dependencies {

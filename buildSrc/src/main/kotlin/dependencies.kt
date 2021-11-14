@@ -1,7 +1,6 @@
 package com.mjpecora.poke.buildsrc
 
 object Libs {
-    const val androidGradlePlugin = "com.android.tools.build:gradle:7.0.3"
     const val jdkDesugar = "com.android.tools:desugar_jdk_libs:1.1.5"
 
     object AndroidX {
@@ -43,7 +42,6 @@ object Libs {
             private const val hiltVersion = "2.38.1"
             const val hiltAndroid = "com.google.dagger:hilt-android:$hiltVersion"
             const val compiler = "com.google.dagger:hilt-android-compiler:$hiltVersion"
-            const val gradlePlugin = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
 
             private const val navigationVersion = "1.0.0-alpha03"
             const val composeNavigation = "androidx.hilt:hilt-navigation-compose:$navigationVersion"
@@ -97,7 +95,6 @@ object Libs {
 
     object Kotlin {
         private const val version = "1.5.31"
-        const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
         const val serialization = "org.jetbrains.kotlin:kotlin-serialization:$version"
         const val stdLib = "org.jetbrains.kotlin:kotlin-stdlib:$version"
     }

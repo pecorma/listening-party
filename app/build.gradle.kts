@@ -9,13 +9,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion(31)
-    buildToolsVersion("30.0.3")
+    compileSdk = 31
+    buildToolsVersion ="30.0.3"
 
     defaultConfig {
         applicationId = "com.mjpecora.poke"
-        minSdkVersion(23)
-        targetSdkVersion(31)
+        minSdk = 23
+        targetSdk = 31
         versionCode = 1
         versionName = "1.0"
 
@@ -43,7 +43,6 @@ android {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
             jvmTarget = "1.8"
-
             freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
             freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.FlowPreview"
             freeCompilerArgs += "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi"
