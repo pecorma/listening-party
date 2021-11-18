@@ -1,4 +1,5 @@
 import com.mjpecora.poke.buildsrc.Libs
+import kotlin.collections.mapOf
 
 plugins {
     id("com.android.application")
@@ -20,8 +21,16 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
+        vectorDrawables.useSupportLibrary = true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true",
+                    "room.expandProjection" to "true"
+                )
+            }
         }
     }
 
@@ -39,15 +48,18 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
             jvmTarget = "1.8"
-            freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
-            freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.FlowPreview"
-            freeCompilerArgs += "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi"
-            freeCompilerArgs += "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi"
-            freeCompilerArgs += "-Xopt-in=coil.annotation.ExperimentalCoilApi"
+            freeCompilerArgs = mutableListOf(
+                "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "-Xopt-in=kotlinx.coroutines.FlowPreview",
+                "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi",
+                "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+                "-Xopt-in=coil.annotation.ExperimentalCoilApi",
+            ).apply {
+                this.addAll(freeCompilerArgs)
+            }
         }
     }
 
@@ -102,6 +114,11 @@ dependencies {
     implementation(Libs.AndroidX.Compose.uiTooling)
     implementation(Libs.AndroidX.Lifecycle.viewmodelCompose)
     implementation(Libs.AndroidX.Activity.compose)
+
+    implementation(Libs.AndroidX.Room.room)
+    implementation(Libs.AndroidX.Room.ktx)
+    implementation(Libs.AndroidX.Room.paging)
+    kapt(Libs.AndroidX.Room.compiler)
 
     coreLibraryDesugaring(Libs.jdkDesugar)
 

@@ -75,6 +75,14 @@ object Libs {
             private const val composeVersion = "1.0.0-alpha14"
             const val compose = "androidx.paging:paging-compose:$composeVersion"
         }
+
+        object Room {
+            private const val version = "2.3.0"
+            const val room = "androidx.room:room-runtime:$version"
+            const val ktx = "androidx.room:room-ktx:$version"
+            const val compiler = "androidx.room:room-compiler:$version"
+            const val paging = "androidx.room:room-paging:2.4.0-beta02"
+        }
     }
 
     object Accompanist {
@@ -120,22 +128,3 @@ object Libs {
     }
 
 }
-
-
-//ext {
-//    appcompat_version = "1.3.1"
-//    compose_version = "1.1.0-beta02"
-//    constraintlayout_version = "2.1.1"
-//    core_ktx_version = "1.7.0"
-//    coroutines_version = "1.5.0"
-//    fragment_version = "1.3.6"
-//    glide_version = "4.12.0"
-//    kotlin_serialization_converter_version = "0.8.0"
-//    kotlin_serialization_version = "1.0.1"
-//    kotlin_version = "1.5.31"
-//    lifecycle_version = "2.2.0"
-//    material_version = "1.4.0"
-//    okhttp_logging_version = "4.9.1"
-//    paging_version = "3.1.0-rc01"
-//    retrofit_version = "2.9.0"
-//}
