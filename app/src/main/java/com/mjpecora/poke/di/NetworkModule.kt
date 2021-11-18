@@ -10,6 +10,8 @@ package com.mjpecora.poke.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mjpecora.poke.api.PokeService
+import com.mjpecora.poke.model.cache.PokemonDao
+import com.mjpecora.poke.ui.datasource.PokemonPagingSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +25,9 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class NetworkModule {
+object NetworkModule {
+
+    private const val BASE_URL = "https://pokeapi.co/api/v2/"
 
     @Singleton
     @Provides
@@ -54,8 +58,13 @@ class NetworkModule {
         return retrofit.create(PokeService::class.java)
     }
 
-    companion object {
-        private const val BASE_URL = "https://pokeapi.co/api/v2/"
+    @Singleton
+    @Provides
+    fun providePokemonPagingSource(
+        service: PokeService,
+        pokemonDao: PokemonDao
+    ): PokemonPagingSource {
+        return PokemonPagingSource(service, pokemonDao)
     }
 
 }

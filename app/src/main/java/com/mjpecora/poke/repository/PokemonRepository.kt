@@ -17,7 +17,9 @@ import com.mjpecora.poke.ui.datasource.PokemonPagingSource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class PokemonRepository @Inject constructor(private val service: PokeService)  {
+class PokemonRepository @Inject constructor(
+    private val pagingSource: PokemonPagingSource
+)  {
 
     fun fetchPokemonList(): Flow<PagingData<Pokemon>> {
         return Pager(
@@ -26,7 +28,7 @@ class PokemonRepository @Inject constructor(private val service: PokeService)  {
                 enablePlaceholders = false,
                 prefetchDistance = 50
             ),
-            pagingSourceFactory = { PokemonPagingSource(service) }
+            pagingSourceFactory = { pagingSource }
         ).flow
     }
 

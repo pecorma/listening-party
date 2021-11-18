@@ -8,14 +8,18 @@
 */
 package com.mjpecora.poke.model.remote
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mjpecora.poke.ui.theme.PokeColors
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable data class Pokemon(
-    val name: String = "",
+@Entity
+@Serializable
+data class Pokemon(
+    var page: Int = 0,
+    @PrimaryKey val name: String = "",
     val url: String = "",
-    var dominantColor: Int = PokeColors.background.value.toInt()
 ) {
     val officialArtworkUrl: String
         get() {

@@ -8,8 +8,8 @@
 */
 package com.mjpecora.poke.di
 
-import com.mjpecora.poke.api.PokeService
 import com.mjpecora.poke.repository.PokemonRepository
+import com.mjpecora.poke.ui.datasource.PokemonPagingSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,10 +18,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class RepositoryModule {
+object RepositoryModule {
 
     @Provides
     @Singleton
-    fun providePokemonRepository(pokeService: PokeService) = PokemonRepository(pokeService)
+    fun providePokemonRepository(pagingSource: PokemonPagingSource) =
+        PokemonRepository(pagingSource)
 
 }
