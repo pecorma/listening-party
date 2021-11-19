@@ -3,11 +3,11 @@ package com.mjpecora.poke.ui.pokeinfo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.mjpecora.poke.ui.theme.PokeShapes
 

@@ -8,7 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.mjpecora.poke.model.remote.PokemonDetail
 import com.mjpecora.poke.repository.PokemonInfoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class PokemonInfoViewState(

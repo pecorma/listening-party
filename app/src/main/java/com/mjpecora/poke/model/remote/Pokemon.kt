@@ -10,7 +10,6 @@ package com.mjpecora.poke.model.remote
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mjpecora.poke.ui.theme.PokeColors
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
