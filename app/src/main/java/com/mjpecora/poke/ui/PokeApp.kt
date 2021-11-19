@@ -13,6 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mjpecora.poke.ui.home.Home
+import com.mjpecora.poke.ui.pokeinfo.PokeInfo
 
 @Composable
 fun PokeApp(
@@ -22,8 +23,18 @@ fun PokeApp(
         navController = appState.navController,
         startDestination = Screen.Home.route
     ) {
-        composable(Screen.Home.route) { navBackStackEntry ->
-            Home(hiltViewModel())
+        composable(Screen.Home.route) { backStackEntry ->
+            Home(hiltViewModel()) {
+                appState.navigateToPokemonInfo(it, backStackEntry)
+            }
+        }
+        composable(
+            Screen.PokeInfo.route
+        ) { backStackEntry ->
+            PokeInfo(
+                backStackEntry.arguments?.getString("name") ?: "",
+                hiltViewModel()
+            )
         }
     }
 }

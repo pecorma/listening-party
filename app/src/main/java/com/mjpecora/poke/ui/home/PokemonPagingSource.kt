@@ -6,7 +6,7 @@
 *  Lowe's Companies Inc. Any distribution of this software
 *  is unlawful and prohibited.
 */
-package com.mjpecora.poke.ui.datasource
+package com.mjpecora.poke.ui.home
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -23,7 +23,7 @@ class PokemonPagingSource @Inject constructor(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Pokemon> {
         val nextPage = params.key ?: 1
-        var pokemonList = pokemonDao.getAllPokemonList(params.key ?: 0)
+        var pokemonList = pokemonDao.getPokemonList(params.key ?: 0)
         if (pokemonList.isEmpty()) {
             pokemonList = service.getPaginatedPokemon(PAGING_LIMIT * (nextPage - 1)).list
                 .onEach {

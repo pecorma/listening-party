@@ -9,7 +9,7 @@
 package com.mjpecora.poke.di
 
 import com.mjpecora.poke.repository.PokemonRepository
-import com.mjpecora.poke.ui.datasource.PokemonPagingSource
+import com.mjpecora.poke.ui.home.PokemonPagingSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

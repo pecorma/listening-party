@@ -24,13 +24,16 @@ data class Pokemon(
     val officialArtworkUrl: String
         get() {
             val index = url.split('/').dropLast(1).last()
-            return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$index.png"
+            return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/" +
+                    "pokemon/other/official-artwork/$index.png"
         }
 }
 
 @Serializable data class PokemonResponse(@SerialName("results") val list: List<Pokemon>)
 
-@Serializable data class PokemonDetail(
+@Entity
+@Serializable
+data class PokemonDetail(
     val id: Int,
     val name: String,
     @SerialName("base_experience") val baseExperience: Int,

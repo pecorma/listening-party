@@ -1,25 +1,16 @@
-/*
-* Lowe's Companies Inc., Android Application
-* Copyright (C)  Lowe's Companies Inc.
-*
-*  The Lowe's Application is the private property of
-*  Lowe's Companies Inc. Any distribution of this software
-*  is unlawful and prohibited.
-*/
 package com.mjpecora.poke.ui.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.material.Card
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.PagingData
@@ -28,23 +19,27 @@ import coil.compose.rememberImagePainter
 import com.mjpecora.poke.model.remote.Pokemon
 import com.mjpecora.poke.ui.theme.PokeColors
 import com.mjpecora.poke.ui.theme.PokeShapes
-import com.mjpecora.poke.ui.theme.PokeTheme
-import com.mjpecora.poke.ui.viewmodel.PokemonViewModel
 import kotlinx.coroutines.flow.Flow
 
-@Preview
 @Composable
 fun Home(
-    viewModel: PokemonViewModel = viewModel()
+    viewModel: PokemonViewModel = viewModel(),
+    navigateToPokeInfo: (String) -> Unit
 ) {
     val pagingDataFlow = viewModel.getPokemon()
     Surface(Modifier.fillMaxSize()) {
-        PokemonGrid(pagingDataFlow = pagingDataFlow)
+        PokemonGrid(
+            pagingDataFlow = pagingDataFlow,
+            navigateToPokeInfo = navigateToPokeInfo
+        )
     }
 }
 
 @Composable
-fun PokemonGrid(pagingDataFlow: Flow<PagingData<Pokemon>>) {
+fun PokemonGrid(
+    pagingDataFlow: Flow<PagingData<Pokemon>>,
+    navigateToPokeInfo: (String) -> Unit
+) {
     val items = pagingDataFlow.collectAsLazyPagingItems()
     LazyVerticalGrid(
         cells = GridCells.Fixed(2),
@@ -53,32 +48,29 @@ fun PokemonGrid(pagingDataFlow: Flow<PagingData<Pokemon>>) {
         contentPadding = PaddingValues(8.dp)
     ) {
         items(items.itemCount) { index ->
-            PokemonCard(items[index], PokeColors.surface.toArgb())
+            PokemonCard(items[index], PokeColors.surface.toArgb(), navigateToPokeInfo)
         }
     }
 }
 
 @Composable
-fun PokemonCard(pokemon: Pokemon?, dominantColor: Int) {
+fun PokemonCard(
+    pokemon: Pokemon?,
+    dominantColor: Int,
+    navigateToPokeInfo: (String) -> Unit
+) {
     Card(
         modifier = Modifier
             .height(200.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable { navigateToPokeInfo(pokemon?.name ?: "") },
         shape = PokeShapes.medium,
-        backgroundColor = Color(dominantColor)
+        backgroundColor = Color(dominantColor),
     ) {
         Image(
             painter = rememberImagePainter(data = pokemon?.officialArtworkUrl),
             contentDescription = null,
             modifier = Modifier.fillMaxSize()
         )
-    }
-}
-
-@Preview
-@Composable
-fun PreviewHome() {
-    PokeTheme {
-        Home()
     }
 }

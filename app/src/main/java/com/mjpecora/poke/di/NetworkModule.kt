@@ -11,11 +11,13 @@ package com.mjpecora.poke.di
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mjpecora.poke.api.PokeService
 import com.mjpecora.poke.model.cache.PokemonDao
-import com.mjpecora.poke.ui.datasource.PokemonPagingSource
+import com.mjpecora.poke.ui.home.PokemonPagingSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -66,5 +68,9 @@ object NetworkModule {
     ): PokemonPagingSource {
         return PokemonPagingSource(service, pokemonDao)
     }
+
+    @Provides
+    @Singleton
+    fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
 
 }

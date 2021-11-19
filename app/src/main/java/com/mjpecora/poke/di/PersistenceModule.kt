@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.mjpecora.poke.model.cache.AppDatabase
 import com.mjpecora.poke.model.cache.PokemonDao
+import com.mjpecora.poke.model.remote.Pokemon
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,5 +26,6 @@ object PersistenceModule {
     @Provides
     @Singleton
     fun providePokemonDao(appDatabase: AppDatabase): PokemonDao = appDatabase.pokemonDao()
+
 
 }

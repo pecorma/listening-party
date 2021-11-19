@@ -6,7 +6,7 @@
 *  Lowe's Companies Inc. Any distribution of this software
 *  is unlawful and prohibited.
 */
-package com.mjpecora.poke.ui.viewmodel
+package com.mjpecora.poke.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
