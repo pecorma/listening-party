@@ -11,8 +11,8 @@ package com.mjpecora.listeningparty.ui.home
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.mjpecora.listeningparty.api.SpotifyService.Companion.PAGING_LIMIT
-import com.mjpecora.poke.model.cache.PokemonDao
-import com.mjpecora.poke.model.remote.Pokemon
+import com.mjpecora.listeningparty.model.cache.PokemonDao
+import com.mjpecora.listeningparty.model.remote.Pokemon
 import javax.inject.Inject
 
 class PokemonPagingSource @Inject constructor(

@@ -16,7 +16,7 @@ import com.mjpecora.listeningparty.ui.home.Home
 import com.mjpecora.listeningparty.ui.pokeinfo.PokeInfo
 
 @Composable
-fun PokeApp(
+fun ListeningPartyApp(
     appState: ListeningPartyAppState = rememberPokeAppState()
 ) {
     NavHost(

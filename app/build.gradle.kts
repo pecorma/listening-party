@@ -1,4 +1,5 @@
 import com.mjpecora.poke.buildsrc.Libs
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
     id("com.android.application")
@@ -68,6 +69,21 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.1.0-beta02"
     }
+
+    allprojects {
+        tasks.withType<DependencyUpdatesTask> {
+            rejectVersionIf {
+                isNonStable(this.candidate.version)
+            }
+        }
+    }
+}
+
+fun isNonStable(version: String): Boolean {
+    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.toUpperCase().contains(it) }
+    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+    val isStable = stableKeyword || regex.matches(version)
+    return isStable.not()
 }
 
 dependencies {

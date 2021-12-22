@@ -16,9 +16,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberImagePainter
-import com.mjpecora.poke.model.remote.Pokemon
-import com.mjpecora.poke.ui.theme.PokeColors
-import com.mjpecora.poke.ui.theme.PokeShapes
+import com.mjpecora.listeningparty.model.remote.Pokemon
+import com.mjpecora.listeningparty.ui.theme.LPColors
+import com.mjpecora.listeningparty.ui.theme.LPShapes
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -48,7 +48,7 @@ fun PokemonGrid(
         contentPadding = PaddingValues(8.dp)
     ) {
         items(items.itemCount) { index ->
-            PokemonCard(items[index], PokeColors.surface.toArgb(), navigateToPokeInfo)
+            PokemonCard(items[index], LPColors.surface.toArgb(), navigateToPokeInfo)
         }
     }
 }
@@ -64,7 +64,7 @@ fun PokemonCard(
             .height(200.dp)
             .fillMaxWidth()
             .clickable { navigateToPokeInfo(pokemon?.name ?: "") },
-        shape = PokeShapes.medium,
+        shape = LPShapes.medium,
         backgroundColor = Color(dominantColor),
     ) {
         Image(

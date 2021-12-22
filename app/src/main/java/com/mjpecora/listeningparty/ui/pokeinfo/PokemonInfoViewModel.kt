@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mjpecora.poke.model.remote.PokemonDetail
-import com.mjpecora.poke.repository.PokemonInfoRepository
+import com.mjpecora.listeningparty.model.remote.PokemonDetail
+import com.mjpecora.listeningparty.repository.PokemonInfoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Deferred

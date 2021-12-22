@@ -2,8 +2,8 @@ package com.mjpecora.listeningparty.di
 
 import android.app.Application
 import androidx.room.Room
-import com.mjpecora.poke.model.cache.AppDatabase
-import com.mjpecora.poke.model.cache.PokemonDao
+import com.mjpecora.listeningparty.model.cache.AppDatabase
+import com.mjpecora.listeningparty.model.cache.PokemonDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -8,8 +8,8 @@
 */
 package com.mjpecora.listeningparty.di
 
-import com.mjpecora.poke.repository.PokemonRepository
-import com.mjpecora.poke.ui.home.PokemonPagingSource
+import com.mjpecora.listeningparty.repository.PokemonRepository
+import com.mjpecora.listeningparty.ui.home.PokemonPagingSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

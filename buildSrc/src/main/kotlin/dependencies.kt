@@ -11,12 +11,12 @@ object Libs {
         }
 
         object AppCompat {
-            private const val version = "1.3.1"
+            private const val version = "1.4.0"
             const val appcompat = "androidx.appcompat:appcompat:$version"
         }
 
         object Compose {
-            private const val version = "1.1.0-beta02"
+            private const val version = "1.0.5"
 
             const val foundation = "androidx.compose.foundation:foundation:$version"
             const val material = "androidx.compose.material:material-icons-core:$version"
@@ -29,7 +29,7 @@ object Libs {
         }
 
         object ConstraintLayout {
-            private const val version = "2.1.1"
+            private const val version = "2.1.2"
             const val constraintlayout = "androidx.constraintlayout:constraintlayout:$version"
         }
 
@@ -39,7 +39,7 @@ object Libs {
         }
 
         object Hilt {
-            private const val hiltVersion = "2.38.1"
+            private const val hiltVersion = "2.40.5"
             const val hiltAndroid = "com.google.dagger:hilt-android:$hiltVersion"
             const val compiler = "com.google.dagger:hilt-android-compiler:$hiltVersion"
 
@@ -69,7 +69,7 @@ object Libs {
         }
 
         object Paging {
-            private const val version = "3.1.0-rc01"
+            private const val version = "3.1.0"
             const val runtimeKtx = "androidx.paging:paging-runtime-ktx:$version"
 
             private const val composeVersion = "1.0.0-alpha14"
@@ -77,11 +77,11 @@ object Libs {
         }
 
         object Room {
-            private const val version = "2.3.0"
+            private const val version = "2.4.0"
             const val room = "androidx.room:room-runtime:$version"
             const val ktx = "androidx.room:room-ktx:$version"
             const val compiler = "androidx.room:room-compiler:$version"
-            const val paging = "androidx.room:room-paging:2.4.0-beta02"
+            const val paging = "androidx.room:room-paging:$version"
         }
     }
 
@@ -96,7 +96,7 @@ object Libs {
     }
 
     object Coroutines {
-        private const val version = "1.5.0"
+        private const val version = "1.5.2"
         const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
     }
@@ -121,13 +121,13 @@ object Libs {
         private const val retrofitVersion = "2.9.0"
         const val retrofit2 = "com.squareup.retrofit2:retrofit:$retrofitVersion"
 
-        private const val loggingVersion = "4.9.1"
+        private const val loggingVersion = "4.9.3"
         const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$loggingVersion"
 
         private const val converterVersion = "0.8.0"
         const val serializationConverter = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$converterVersion"
 
-        private const val serializationVersion = "1.0.1"
+        private const val serializationVersion = "1.3.1"
         const val serializationCore = "org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion"
         const val serializationJson = "org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion"
     }

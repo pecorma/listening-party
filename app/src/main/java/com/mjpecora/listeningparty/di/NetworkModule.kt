@@ -9,8 +9,8 @@
 package com.mjpecora.listeningparty.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.mjpecora.poke.model.cache.PokemonDao
-import com.mjpecora.poke.ui.home.PokemonPagingSource
+import com.mjpecora.listeningparty.model.cache.PokemonDao
+import com.mjpecora.listeningparty.ui.home.PokemonPagingSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -47,7 +47,7 @@ object NetworkModule {
         val contentType = "application/json".toMediaType()
         val json = Json{ ignoreUnknownKeys = true }
         return Retrofit.Builder()
-            .baseUrl(com.mjpecora.listeningparty.di.NetworkModule.BASE_URL)
+            .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()

@@ -10,8 +10,8 @@ package com.mjpecora.listeningparty.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
-import com.mjpecora.poke.model.remote.Pokemon
-import com.mjpecora.poke.repository.PokemonRepository
+import com.mjpecora.listeningparty.model.remote.Pokemon
+import com.mjpecora.listeningparty.repository.PokemonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
