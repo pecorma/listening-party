@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mjpecora.poke">
+    package="com.mjpecora.listeningparty">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:name=".PokeApplication"
+        android:name="com.mjpecora.listeningparty.ListeningPartyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

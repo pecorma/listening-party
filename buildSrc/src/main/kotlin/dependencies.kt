@@ -52,10 +52,10 @@ object Libs {
 
             const val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
             const val livedataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
-            const val viewmodelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
+            const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
 
             private const val versionUpdated = "2.4.0"
-            const val viewmodelCompose = "androidx.lifecycle:lifecycle-viewmodel-compose:$versionUpdated"
+            const val viewModelCompose = "androidx.lifecycle:lifecycle-viewmodel-compose:$versionUpdated"
         }
 
         object Navigation {
@@ -110,6 +110,11 @@ object Libs {
     object Material {
         private const val version = "1.4.0"
         const val material = "com.google.android.material:material:$version"
+    }
+
+    object ML {
+        private const val version = "17.0.1"
+        const val textRecognition = "com.google.android.gms:play-services-mlkit-text-recognition:$version"
     }
 
     object Networking {

@@ -13,7 +13,7 @@ android {
     buildToolsVersion ="30.0.3"
 
     defaultConfig {
-        applicationId = "com.mjpecora.poke"
+        applicationId = "com.mjpecora.listeningparty"
         minSdk = 23
         targetSdk = 31
         versionCode = 1
@@ -50,14 +50,12 @@ android {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
             jvmTarget = "1.8"
-            freeCompilerArgs = mutableListOf(
-                "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                "-Xopt-in=kotlinx.coroutines.FlowPreview",
-                "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi",
-                "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi",
-                "-Xopt-in=coil.annotation.ExperimentalCoilApi",
-            ).apply {
-                this.addAll(freeCompilerArgs)
+            freeCompilerArgs = freeCompilerArgs.toMutableList().apply {
+                add( "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi")
+                add("-Xopt-in=kotlinx.coroutines.FlowPreview")
+                add("-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi")
+                add("-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi")
+                add("-Xopt-in=coil.annotation.ExperimentalCoilApi")
             }
         }
     }
@@ -85,7 +83,7 @@ dependencies {
 
     implementation(Libs.AndroidX.Lifecycle.extensions)
     implementation(Libs.AndroidX.Lifecycle.livedataKtx)
-    implementation(Libs.AndroidX.Lifecycle.viewmodelKtx)
+    implementation(Libs.AndroidX.Lifecycle.viewModelKtx)
 
     implementation(Libs.AndroidX.Navigation.compose)
 
@@ -111,8 +109,10 @@ dependencies {
     implementation(Libs.AndroidX.Compose.runtimeLivedata)
     implementation(Libs.AndroidX.Compose.ui)
     implementation(Libs.AndroidX.Compose.uiTooling)
-    implementation(Libs.AndroidX.Lifecycle.viewmodelCompose)
+    implementation(Libs.AndroidX.Lifecycle.viewModelCompose)
     implementation(Libs.AndroidX.Activity.compose)
+
+    implementation(Libs.ML.textRecognition)
 
     implementation(Libs.AndroidX.Room.room)
     implementation(Libs.AndroidX.Room.ktx)

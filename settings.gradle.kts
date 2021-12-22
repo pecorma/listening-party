@@ -1,2 +1,2 @@
-rootProject.name = "Poke"
+rootProject.name = "Listening Party"
 include(":app")
