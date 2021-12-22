@@ -1,5 +1,7 @@
 package com.mjpecora.poke.buildsrc
 
+import org.gradle.api.file.ConfigurableFileTree
+
 object Libs {
     const val jdkDesugar = "com.android.tools:desugar_jdk_libs:1.1.5"
 

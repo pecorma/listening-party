@@ -29,6 +29,8 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private const val BASE_URL = "https://pokeapi.co/api/v2/"
+    private const val CLIENT_ID = "0425167cfd5c4a23b7765f04468d3ce2"
+    private const val CLIENT_REDIRECT_URL = "listening-party-spotify-login://callback"
 
     @Singleton
     @Provides
