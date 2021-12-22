@@ -8,8 +8,6 @@
 */
 package com.mjpecora.listeningparty.di
 
-import com.mjpecora.listeningparty.repository.PokemonRepository
-import com.mjpecora.listeningparty.ui.home.PokemonPagingSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,11 +16,4 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RepositoryModule {
-
-    @Provides
-    @Singleton
-    fun providePokemonRepository(pagingSource: PokemonPagingSource) =
-        PokemonRepository(pagingSource)
-
-}
+object RepositoryModule

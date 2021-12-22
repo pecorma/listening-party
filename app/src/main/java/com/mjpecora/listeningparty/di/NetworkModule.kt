@@ -8,70 +8,61 @@
 */
 package com.mjpecora.listeningparty.di
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.mjpecora.listeningparty.model.cache.PokemonDao
-import com.mjpecora.listeningparty.ui.home.PokemonPagingSource
+import android.content.Context
+import com.spotify.android.appremote.api.ConnectionParams
+import com.spotify.android.appremote.api.Connector
+import com.spotify.android.appremote.api.SpotifyAppRemote
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
+import kotlinx.coroutines.*
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://pokeapi.co/api/v2/"
     private const val CLIENT_ID = "0425167cfd5c4a23b7765f04468d3ce2"
-    private const val CLIENT_REDIRECT_URL = "listening-party-spotify-login://callback"
+    private const val CLIENT_REDIRECT_URI = "listening-party-spotify-login://callback"
+
 
     @Singleton
     @Provides
-    fun providePokeClient(): OkHttpClient {
-        val logger = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
-        return OkHttpClient.Builder()
-            .addInterceptor(logger)
+    fun provideConnectionParams(): ConnectionParams =
+        ConnectionParams.Builder(CLIENT_ID)
+            .setRedirectUri(CLIENT_REDIRECT_URI)
+            .showAuthView(true)
             .build()
-    }
 
-    @Singleton
-    @Provides
-    fun provideRetrofit(client: OkHttpClient): Retrofit {
-        val contentType = "application/json".toMediaType()
-        val json = Json{ ignoreUnknownKeys = true }
-        return Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(client)
-            .addConverterFactory(json.asConverterFactory(contentType))
-            .build()
-    }
 
-    @Singleton
-    @Provides
-    fun providePokeService(retrofit: Retrofit): com.mjpecora.listeningparty.api.SpotifyService {
-        return retrofit.create(com.mjpecora.listeningparty.api.SpotifyService::class.java)
-    }
 
-    @Singleton
-    @Provides
-    fun providePokemonPagingSource(
-        service: com.mjpecora.listeningparty.api.SpotifyService,
-        pokemonDao: PokemonDao
-    ): PokemonPagingSource {
-        return PokemonPagingSource(service, pokemonDao)
-    }
-
-    @Provides
-    @Singleton
-    fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
+//    @Singleton
+//    @Provides
+//    fun provideRetrofit(client: OkHttpClient): Retrofit {
+//        val contentType = "application/json".toMediaType()
+//        val json = Json{ ignoreUnknownKeys = true }
+//        return Retrofit.Builder()
+//            .baseUrl(BASE_URL)
+//            .client(client)
+//            .addConverterFactory(json.asConverterFactory(contentType))
+//            .build()
+//    }
+//
+//    @Singleton
+//    @Provides
+//    fun providePokeService(retrofit: Retrofit): com.mjpecora.listeningparty.api.SpotifyService {
+//        return retrofit.create(com.mjpecora.listeningparty.api.SpotifyService::class.java)
+//    }
+//
+//    @Singleton
+//    @Provides
+//    fun providePokemonPagingSource(
+//        service: com.mjpecora.listeningparty.api.SpotifyService,
+//        pokemonDao: PokemonDao
+//    ): PokemonPagingSource {
+//        return PokemonPagingSource(service, pokemonDao)
+//    }
 
 }

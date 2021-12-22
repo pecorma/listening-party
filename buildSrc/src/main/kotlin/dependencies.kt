@@ -1,6 +1,4 @@
-package com.mjpecora.poke.buildsrc
-
-import org.gradle.api.file.ConfigurableFileTree
+package com.mjpecora.listeningparty.buildsrc
 
 object Libs {
     const val jdkDesugar = "com.android.tools:desugar_jdk_libs:1.1.5"
@@ -101,6 +99,11 @@ object Libs {
         private const val version = "1.5.2"
         const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
+    }
+
+    object Gson {
+        private const val version = "2.8.5"
+        const val gson = "com.google.code.gson:gson:$version"
     }
 
     object Kotlin {

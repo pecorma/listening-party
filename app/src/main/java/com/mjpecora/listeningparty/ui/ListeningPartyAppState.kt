@@ -19,13 +19,10 @@ import androidx.navigation.compose.rememberNavController
 
 sealed class Screen(val route: String) {
     object Home: Screen("home")
-    object PokeInfo: Screen("pokeinfo/{name}") {
-        fun createRoute(name: String) = "pokeinfo/$name"
-    }
 }
 
 @Composable
-fun rememberPokeAppState(
+fun rememberLPAppState(
     navController: NavHostController = rememberNavController(),
     context: Context = LocalContext.current
 ) = remember(navController, context) {
@@ -43,7 +40,7 @@ class ListeningPartyAppState(
 
     fun navigateToPokemonInfo(name: String, from: NavBackStackEntry) {
         if (from.isLifeCycleResumed()) {
-            navController.navigate(Screen.PokeInfo.createRoute(name))
+            // navController.navigate(Screen.PokeInfo.createRoute(name))
         }
     }
 

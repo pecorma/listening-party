@@ -1,4 +1,4 @@
-import com.mjpecora.poke.buildsrc.Libs
+import com.mjpecora.listeningparty.buildsrc.Libs
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
@@ -109,6 +109,7 @@ dependencies {
     implementation(Libs.Networking.serializationConverter)
     implementation(Libs.Networking.serializationJson)
     implementation(Libs.Networking.serializationCore)
+    implementation(Libs.Gson.gson)
     implementation(Libs.Coil.compose)
 
     implementation(Libs.Coroutines.coroutinesAndroid)
