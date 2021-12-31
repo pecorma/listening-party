@@ -101,6 +101,12 @@ object Libs {
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
     }
 
+    object Firebase {
+        private const val version = "29.0.3"
+        const val bom = "com.google.firebase:firebase-bom:$version"
+        const val auth = "com.google.firebase:firebase-auth-ktx"
+    }
+
     object Google {
         private const val version = "19.2.0"
         const val auth = "com.google.android.gms:play-services-auth:$version"

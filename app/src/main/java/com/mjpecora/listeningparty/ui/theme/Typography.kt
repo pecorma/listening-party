@@ -1,11 +1,3 @@
-/*
-* Lowe's Companies Inc., Android Application
-* Copyright (C)  Lowe's Companies Inc.
-*
-*  The Lowe's Application is the private property of
-*  Lowe's Companies Inc. Any distribution of this software
-*  is unlawful and prohibited.
-*/
 package com.mjpecora.listeningparty.ui.theme
 
 import androidx.compose.material.Typography
@@ -107,7 +99,7 @@ val LPTypography = Typography(
     overline = TextStyle(
         fontFamily = Montserrat,
         fontSize = 12.sp,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         lineHeight = 16.sp,
         letterSpacing = 1.sp
     )

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "17774155879",
+    "project_id": "listening-party-336806",
+    "storage_bucket": "listening-party-336806.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17774155879:android:e15ce5b3f9082d37f91cc2",
+        "android_client_info": {
+          "package_name": "com.mjpecora.listeningparty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17774155879-mugfla3896d7h2k39ainjbhfv0hnkdff.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mjpecora.listeningparty",
+            "certificate_hash": "72e9dd23363256f94e1964ecb76bbfd9c8c91bc7"
+          }
+        },
+        {
+          "client_id": "17774155879-i64ne7v32pda7vatjupn9iiflg0a0i31.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOXvH86zFtgHmisEMTdb9zcEWk9xsv_mg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "17774155879-i64ne7v32pda7vatjupn9iiflg0a0i31.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

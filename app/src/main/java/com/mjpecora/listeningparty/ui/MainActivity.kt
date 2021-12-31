@@ -5,32 +5,31 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.mjpecora.listeningparty.ui.theme.LPTheme
-import com.mjpecora.listeningparty.util.spotify
-import com.spotify.android.appremote.api.ConnectionParams
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject lateinit var connectionParams: ConnectionParams
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        setContent {
-            LPTheme {
-                ProvideWindowInsets {
-                    LPApp()
+        GoogleSignIn.getClient(this, GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .signOut()
+            .addOnSuccessListener {
+                setContent {
+                    LPTheme {
+                        ProvideWindowInsets(windowInsetsAnimationsEnabled = true) {
+                            LPApp()
+                        }
+                    }
                 }
             }
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        spotify()
     }
 
 }

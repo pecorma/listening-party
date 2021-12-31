@@ -4,6 +4,7 @@
     package="com.mjpecora.listeningparty">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 
     <application
         android:name="com.mjpecora.listeningparty.ListeningPartyApp"

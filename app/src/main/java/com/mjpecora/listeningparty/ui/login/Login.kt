@@ -1,42 +1,73 @@
 package com.mjpecora.listeningparty.ui.login
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.GoogleAuthProvider
 import com.mjpecora.listeningparty.ui.theme.*
 
 @Composable
-fun Login(navigateToHome: () -> Unit) {
-    Surface(Modifier.fillMaxSize()) {
+fun Login(loginViewModel: LoginViewModel, navigateToHome: () -> Unit) {
+
+    val viewState: LoginViewState by loginViewModel.viewState.collectAsState()
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = BottomSheetState(
+            if (viewState is LoginViewState.CreateAccount) {
+                BottomSheetValue.Expanded
+            } else {
+                BottomSheetValue.Collapsed
+            }
+        )
+    )
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetScaffoldState,
+        modifier = Modifier.fillMaxSize(),
+        sheetPeekHeight = 0.dp,
+        sheetContent = {
+            CreateAccountBottomSheet(
+                modifier = Modifier
+                    .fillMaxHeight(0.85f)
+                    .fillMaxWidth()
+            )
+        },
+        sheetElevation = 2.dp
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 32.dp),
+                .padding(horizontal = 32.dp)
         ) {
             Spacer(modifier = Modifier.height(120.dp))
             Text(
                 text = "Login",
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.h5,
             )
             Spacer(modifier = Modifier.height(24.dp))
             LoginInputField("username", userIcon, LoginInputField.USERNAME)
@@ -44,11 +75,26 @@ fun Login(navigateToHome: () -> Unit) {
             LoginInputField("password", lockIcon, LoginInputField.PASSWORD)
             Spacer(modifier = Modifier.height(24.dp))
             LoginButton(navigateToHome)
+            Spacer(modifier = Modifier.height(16.dp))
+            SignUpView()
             Spacer(modifier = Modifier.height(64.dp))
             ConnectWithDivider()
             Spacer(modifier = Modifier.height(32.dp))
-            GoogleLoginButton()
+            GoogleLoginButton(loginViewModel)
         }
+    }
+}
+
+@Composable
+private fun CreateAccountBottomSheet(modifier: Modifier) {
+    Box(
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).then(modifier),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        Text(
+            text = "Create account",
+            style = MaterialTheme.typography.body1
+        )
     }
 }
 
@@ -58,12 +104,37 @@ private val horizontalButtonGradient = Brush.horizontalGradient(
     colors = listOf(Color(0xFF008FF1), Color(0xFF61BBFE))
 )
 
+
+@Composable
+private fun SignUpView() {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    Row {
+        Text(
+            text = "Don't have an account?",
+            style = MaterialTheme.typography.caption,
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = "Sign up.",
+            style = MaterialTheme.typography.overline,
+            color = if (isPressed) Blue else { Blue200 },
+            modifier = Modifier
+                .clickable(interactionSource = interactionSource, indication = null) {
+
+                }
+        )
+    }
+}
+
 @Composable
 private fun LoginButton(navigate: () -> Unit) {
     Button(
         onClick = { navigate() },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
         contentPadding = PaddingValues(),
+        elevation = ButtonDefaults.elevation(4.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Box(
@@ -79,11 +150,32 @@ private fun LoginButton(navigate: () -> Unit) {
 }
 
 @Composable
-private fun GoogleLoginButton() {
+private fun GoogleLoginButton(viewModel: LoginViewModel) {
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) {
+        val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+            viewModel.signInWithAuthCredential(credential)
+        } catch (e: ApiException) {
+            Log.d("GoogleAuth", "failed to sign in")
+        }
+    }
+    val context = LocalContext.current
     Button(
-        onClick = {  TODO() },
+        onClick = {
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("17774155879-i64ne7v32pda7vatjupn9iiflg0a0i31.apps.googleusercontent.com")
+                .requestEmail()
+                .build()
+            val googleSignInClient = GoogleSignIn.getClient(context, gso)
+            launcher.launch(googleSignInClient.signInIntent)
+        },
         colors = ButtonDefaults.buttonColors(backgroundColor = Pink100),
         contentPadding = PaddingValues(),
+        elevation = ButtonDefaults.elevation(4.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -108,11 +200,11 @@ private fun ConnectWithDivider() {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Divider(Modifier.weight(1.0f))
+        Divider(Modifier.weight(1.0f), color = Color.White)
         Spacer(Modifier.width(12.dp))
         Text("or connect with", style = MaterialTheme.typography.caption)
         Spacer(Modifier.width(12.dp))
-        Divider(Modifier.weight(1.0f))
+        Divider(Modifier.weight(1.0f), color = Color.White)
     }
 }
 
@@ -127,6 +219,7 @@ private fun LoginInputField(placeHolder: String, leadingIcon: Painter, field: Lo
         onValueChange = { input.value = it },
         textStyle = MaterialTheme.typography.body1,
         placeholder = { Text(placeHolder) },
+        singleLine = true,
         colors = TextFieldDefaults
             .textFieldColors(
                 textColor = Color.White,
@@ -148,7 +241,7 @@ private fun LoginInputField(placeHolder: String, leadingIcon: Painter, field: Lo
                     tint = if (isTinted.value) { Blue200 } else { Color.White },
                     modifier = Modifier
                         .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
+                            interactionSource = MutableInteractionSource(),
                             indication = null
                         ) { isVisible.value = isVisible.value.not() }
                 )
@@ -166,5 +259,5 @@ private fun LoginInputField(placeHolder: String, leadingIcon: Painter, field: Lo
 }
 
 @Composable
-@Preview(showSystemUi = true, showBackground = true)
-fun Preview() = Login {}
+@Preview(showSystemUi = true, showBackground = true, device = Devices.PIXEL)
+fun Preview() = Login(hiltViewModel()) {}

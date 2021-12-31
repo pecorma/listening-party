@@ -7,6 +7,7 @@ plugins {
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
     id("kotlinx-serialization")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -57,7 +58,7 @@ android {
                 add("-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi")
                 add("-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi")
                 add("-Xopt-in=coil.annotation.ExperimentalCoilApi")
-                add("-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi")
+                add("-Xopt-in=androidx.compose.material.ExperimentalMaterialApi")
             }
         }
     }
@@ -133,6 +134,8 @@ dependencies {
 
     implementation(Libs.ML.textRecognition)
 
+    implementation(platform(Libs.Firebase.bom))
+    implementation(Libs.Firebase.auth)
     implementation(Libs.Google.auth)
 
     implementation(Libs.AndroidX.Room.room)
