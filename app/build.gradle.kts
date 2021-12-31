@@ -57,6 +57,7 @@ android {
                 add("-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi")
                 add("-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi")
                 add("-Xopt-in=coil.annotation.ExperimentalCoilApi")
+                add("-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi")
             }
         }
     }
