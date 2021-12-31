@@ -18,7 +18,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 sealed class Screen(val route: String) {
-    object Home: Screen("home")
+    object Login : Screen("login")
+    object Home : Screen("home")
 }
 
 @Composable
@@ -38,9 +39,9 @@ class ListeningPartyAppState(
         navController.popBackStack()
     }
 
-    fun navigateToPokemonInfo(name: String, from: NavBackStackEntry) {
+    fun navigateToHome(from: NavBackStackEntry) {
         if (from.isLifeCycleResumed()) {
-            // navController.navigate(Screen.PokeInfo.createRoute(name))
+            navController.navigate(Screen.Home.route)
         }
     }
 

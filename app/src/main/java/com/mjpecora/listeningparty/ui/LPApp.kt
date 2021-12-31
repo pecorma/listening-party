@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mjpecora.listeningparty.ui.home.Home
+import com.mjpecora.listeningparty.ui.login.Login
 
 @Composable
 fun LPApp(
@@ -19,11 +20,11 @@ fun LPApp(
 ) {
     NavHost(
         navController = appState.navController,
-        startDestination = Screen.Home.route
+        startDestination = Screen.Login.route
     ) {
-        composable(Screen.Home.route) { backStackEntry ->
-            Home {
-                appState.navigateToPokemonInfo(it, backStackEntry)
+        composable(Screen.Login.route) { backStackEntry ->
+            Login {
+                appState.navigateToHome(backStackEntry)
             }
         }
     }

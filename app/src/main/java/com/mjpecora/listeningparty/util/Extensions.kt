@@ -5,7 +5,7 @@ import com.spotify.android.appremote.api.SpotifyAppRemote
 
 fun Any.tag(): String = this::class.java.simpleName
 
-fun <T> spotify(isDisconnect: Boolean = false, action: (SpotifyAppRemote?.() -> T)? = null) {
+fun spotify(isDisconnect: Boolean = false, action: (SpotifyAppRemote?.() -> Unit)? = null) {
     with (ListeningPartyApp.app.spotifyAppRemote) {
         if (isDisconnect.not() && (this == null || this.isConnected.not())) {
             ListeningPartyApp.app.spotifyConnect(action)
