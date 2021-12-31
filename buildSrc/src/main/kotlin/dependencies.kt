@@ -101,6 +101,11 @@ object Libs {
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
     }
 
+    object Google {
+        private const val version = "19.2.0"
+        const val auth = "com.google.android.gms:play-services-auth:$version"
+    }
+
     object Gson {
         private const val version = "2.8.5"
         const val gson = "com.google.code.gson:gson:$version"

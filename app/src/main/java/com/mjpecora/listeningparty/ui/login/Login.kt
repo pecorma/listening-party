@@ -1,5 +1,6 @@
 package com.mjpecora.listeningparty.ui.login
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -37,12 +38,16 @@ fun Login(navigateToHome: () -> Unit) {
                 text = "Login",
                 style = MaterialTheme.typography.h5
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             LoginInputField("username", userIcon, LoginInputField.USERNAME)
             Spacer(modifier = Modifier.height(16.dp))
             LoginInputField("password", lockIcon, LoginInputField.PASSWORD)
             Spacer(modifier = Modifier.height(24.dp))
             LoginButton(navigateToHome)
+            Spacer(modifier = Modifier.height(64.dp))
+            ConnectWithDivider()
+            Spacer(modifier = Modifier.height(32.dp))
+            GoogleLoginButton()
         }
     }
 }
@@ -74,11 +79,49 @@ private fun LoginButton(navigate: () -> Unit) {
 }
 
 @Composable
+private fun GoogleLoginButton() {
+    Button(
+        onClick = {  TODO() },
+        colors = ButtonDefaults.buttonColors(backgroundColor = Pink100),
+        contentPadding = PaddingValues(),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .background(Color.Transparent)
+                .fillMaxWidth()
+                .height(ButtonDefaults.MinHeight)
+        ) {
+            Image(painter = googleGIcon, contentDescription = "")
+            Spacer(modifier = Modifier.width(24.dp))
+            Text("Google sign in")
+        }
+    }
+}
+
+@Composable
+private fun ConnectWithDivider() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Divider(Modifier.weight(1.0f))
+        Spacer(Modifier.width(12.dp))
+        Text("or connect with", style = MaterialTheme.typography.caption)
+        Spacer(Modifier.width(12.dp))
+        Divider(Modifier.weight(1.0f))
+    }
+}
+
+@Composable
 private fun LoginInputField(placeHolder: String, leadingIcon: Painter, field: LoginInputField) {
     val input = rememberSaveable { mutableStateOf("") }
     val isVisible = rememberSaveable { mutableStateOf(false) }
     val isTinted = rememberSaveable { mutableStateOf(false) }
-    val isClickedFocus = rememberSaveable { mutableStateOf(false) }
+
     OutlinedTextField(
         value = input.value,
         onValueChange = { input.value = it },
@@ -107,10 +150,7 @@ private fun LoginInputField(placeHolder: String, leadingIcon: Painter, field: Lo
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
-                        ) {
-                            isVisible.value = isVisible.value.not()
-                            isClickedFocus.value = true
-                        }
+                        ) { isVisible.value = isVisible.value.not() }
                 )
             }
         },

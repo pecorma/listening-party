@@ -7,17 +7,16 @@ import com.mjpecora.listeningparty.R
 
 
 val userIcon: Painter
-    @Composable get() {
-        return painterResource(id = R.drawable.ic_user)
-    }
+    @Composable get() = painterResource(id = R.drawable.ic_user)
 
 val lockIcon: Painter
-    @Composable get() {
-        return painterResource(id = R.drawable.ic_lock)
-    }
+    @Composable get() = painterResource(id = R.drawable.ic_lock)
 
 val eyeClosedIcon: Painter
     @Composable get() = painterResource(id = R.drawable.ic_eye_closed)
 
 val eyeOpenIcon: Painter
     @Composable get() = painterResource(id = R.drawable.ic_eye_open)
+
+val googleGIcon: Painter
+    @Composable get() = painterResource(id = R.drawable.ic_google_g)

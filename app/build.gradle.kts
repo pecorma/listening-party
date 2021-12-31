@@ -133,6 +133,8 @@ dependencies {
 
     implementation(Libs.ML.textRecognition)
 
+    implementation(Libs.Google.auth)
+
     implementation(Libs.AndroidX.Room.room)
     implementation(Libs.AndroidX.Room.ktx)
     implementation(Libs.AndroidX.Room.paging)
