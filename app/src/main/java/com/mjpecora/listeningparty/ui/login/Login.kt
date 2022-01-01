@@ -60,7 +60,7 @@ fun Login(loginViewModel: LoginViewModel, navigate: (Navigate) -> Unit) {
             Spacer(modifier = Modifier.height(24.dp))
             LoginButton(navigate)
             Spacer(modifier = Modifier.height(16.dp))
-            SignUpView()
+            SignUpView(navigate)
             Spacer(modifier = Modifier.height(64.dp))
             ConnectWithDivider()
             Spacer(modifier = Modifier.height(32.dp))
@@ -77,7 +77,7 @@ private val horizontalButtonGradient = Brush.horizontalGradient(
 
 
 @Composable
-private fun SignUpView() {
+private fun SignUpView(navigate: (Navigate) -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -93,7 +93,7 @@ private fun SignUpView() {
             color = if (isPressed) Blue else { Blue200 },
             modifier = Modifier
                 .clickable(interactionSource = interactionSource, indication = null) {
-
+                    navigate(Navigate.CREATE_ACCOUNT)
                 }
         )
     }
@@ -194,7 +194,8 @@ private fun LoginInputField(placeHolder: String, leadingIcon: Painter, field: Lo
         colors = TextFieldDefaults
             .textFieldColors(
                 textColor = Color.White,
-                placeholderColor = Color.White
+                placeholderColor = Color.White,
+                backgroundColor = Color.Transparent
             ),
         leadingIcon = {
             Icon(leadingIcon, "", tint = if (isTinted.value) { Blue200 } else { Color.White })

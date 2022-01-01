@@ -53,12 +53,13 @@ android {
         kotlinOptions {
             jvmTarget = "1.8"
             freeCompilerArgs = freeCompilerArgs.toMutableList().apply {
-                add( "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi")
+                add("-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi")
                 add("-Xopt-in=kotlinx.coroutines.FlowPreview")
                 add("-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi")
                 add("-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi")
                 add("-Xopt-in=coil.annotation.ExperimentalCoilApi")
                 add("-Xopt-in=androidx.compose.material.ExperimentalMaterialApi")
+                add("-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi")
             }
         }
     }
@@ -122,6 +123,7 @@ dependencies {
     implementation(Libs.AndroidX.Paging.compose)
     implementation(Libs.AndroidX.Compose.material3)
     implementation(Libs.Accompanist.insets)
+    implementation(Libs.Accompanist.navigationAnimations)
     implementation(Libs.AndroidX.Compose.foundation)
     implementation(Libs.AndroidX.Compose.material)
     implementation(Libs.AndroidX.Compose.materialIconsCore)

@@ -86,8 +86,9 @@ object Libs {
     }
 
     object Accompanist {
-        private const val version = "0.21.1-beta"
+        private const val version = "0.22.0-rc"
         const val insets = "com.google.accompanist:accompanist-insets:$version"
+        const val navigationAnimations = "com.google.accompanist:accompanist-navigation-animation:$version"
     }
 
     object Coil {

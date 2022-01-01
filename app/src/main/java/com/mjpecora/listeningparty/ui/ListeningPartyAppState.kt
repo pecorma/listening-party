@@ -7,7 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
@@ -17,16 +17,13 @@ sealed class Screen(val route: String) {
 
 @Composable
 fun rememberLPAppState(
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController = rememberAnimatedNavController(),
     context: Context = LocalContext.current
 ) = remember(navController, context) {
-    ListeningPartyAppState(navController, context)
+    ListeningPartyAppState(navController)
 }
 
-class ListeningPartyAppState(
-    val navController: NavHostController,
-    private val context: Context
-) {
+class ListeningPartyAppState(val navController: NavHostController) {
 
     fun navigateBack() {
         navController.popBackStack()
