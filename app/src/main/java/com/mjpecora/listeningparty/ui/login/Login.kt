@@ -10,8 +10,20 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +43,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
-import com.mjpecora.listeningparty.ui.theme.*
+import com.mjpecora.listeningparty.ui.theme.Blue
+import com.mjpecora.listeningparty.ui.theme.Blue200
+import com.mjpecora.listeningparty.ui.theme.Pink100
+import com.mjpecora.listeningparty.ui.theme.eyeClosedIcon
+import com.mjpecora.listeningparty.ui.theme.eyeOpenIcon
+import com.mjpecora.listeningparty.ui.theme.googleGIcon
+import com.mjpecora.listeningparty.ui.theme.lockIcon
+import com.mjpecora.listeningparty.ui.theme.userIcon
 
 @Composable
 fun Login(loginViewModel: LoginViewModel, navigate: (Navigate) -> Unit) {
@@ -71,7 +90,7 @@ fun Login(loginViewModel: LoginViewModel, navigate: (Navigate) -> Unit) {
 
 private enum class LoginInputField { PASSWORD, USERNAME }
 
-private val horizontalButtonGradient = Brush.horizontalGradient(
+internal val horizontalButtonGradient = Brush.horizontalGradient(
     colors = listOf(Color(0xFF008FF1), Color(0xFF61BBFE))
 )
 

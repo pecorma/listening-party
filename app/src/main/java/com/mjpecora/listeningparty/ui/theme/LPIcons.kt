@@ -20,3 +20,9 @@ val eyeOpenIcon: Painter
 
 val googleGIcon: Painter
     @Composable get() = painterResource(id = R.drawable.ic_google_g)
+
+val arrowLeftIcon: Painter
+    @Composable get() = painterResource(id = R.drawable.ic_arrow_left)
+
+val mailIcon: Painter
+    @Composable get() = painterResource(id = R.drawable.ic_mail)
