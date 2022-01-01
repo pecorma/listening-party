@@ -3,7 +3,9 @@ package com.mjpecora.listeningparty.ui.login
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
@@ -13,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -33,30 +34,13 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.mjpecora.listeningparty.ui.theme.*
 
 @Composable
-fun Login(loginViewModel: LoginViewModel, navigateToHome: () -> Unit) {
-
+fun Login(loginViewModel: LoginViewModel, navigate: (Navigate) -> Unit) {
     val viewState: LoginViewState by loginViewModel.viewState.collectAsState()
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(
-            if (viewState is LoginViewState.CreateAccount) {
-                BottomSheetValue.Expanded
-            } else {
-                BottomSheetValue.Collapsed
-            }
-        )
-    )
-    BottomSheetScaffold(
-        scaffoldState = bottomSheetScaffoldState,
-        modifier = Modifier.fillMaxSize(),
-        sheetPeekHeight = 0.dp,
-        sheetContent = {
-            CreateAccountBottomSheet(
-                modifier = Modifier
-                    .fillMaxHeight(0.85f)
-                    .fillMaxWidth()
-            )
-        },
-        sheetElevation = 2.dp
+    if (viewState is LoginViewState.CreateAccount) {
+        navigate(Navigate.CREATE_ACCOUNT)
+    }
+    Scaffold(
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -74,7 +58,7 @@ fun Login(loginViewModel: LoginViewModel, navigateToHome: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
             LoginInputField("password", lockIcon, LoginInputField.PASSWORD)
             Spacer(modifier = Modifier.height(24.dp))
-            LoginButton(navigateToHome)
+            LoginButton(navigate)
             Spacer(modifier = Modifier.height(16.dp))
             SignUpView()
             Spacer(modifier = Modifier.height(64.dp))
@@ -82,19 +66,6 @@ fun Login(loginViewModel: LoginViewModel, navigateToHome: () -> Unit) {
             Spacer(modifier = Modifier.height(32.dp))
             GoogleLoginButton(loginViewModel)
         }
-    }
-}
-
-@Composable
-private fun CreateAccountBottomSheet(modifier: Modifier) {
-    Box(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).then(modifier),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        Text(
-            text = "Create account",
-            style = MaterialTheme.typography.body1
-        )
     }
 }
 
@@ -129,9 +100,9 @@ private fun SignUpView() {
 }
 
 @Composable
-private fun LoginButton(navigate: () -> Unit) {
+private fun LoginButton(navigate: (Navigate) -> Unit) {
     Button(
-        onClick = { navigate() },
+        onClick = { navigate(Navigate.HOME) },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
         contentPadding = PaddingValues(),
         elevation = ButtonDefaults.elevation(4.dp),

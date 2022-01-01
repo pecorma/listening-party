@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 sealed class Screen(val route: String) {
     object Login : Screen("login")
     object Home : Screen("home")
+    object CreateAccount : Screen("createAccount")
 }
 
 @Composable
@@ -34,6 +35,12 @@ class ListeningPartyAppState(
     fun navigateToHome(from: NavBackStackEntry) {
         if (from.isLifeCycleResumed()) {
             navController.navigate(Screen.Home.route)
+        }
+    }
+
+    fun navigateToCreateAccount(from: NavBackStackEntry) {
+        if (from.isLifeCycleResumed()) {
+            navController.navigate(Screen.CreateAccount.route)
         }
     }
 

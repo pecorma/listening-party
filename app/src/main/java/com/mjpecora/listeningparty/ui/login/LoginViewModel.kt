@@ -7,12 +7,12 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mjpecora.listeningparty.base.ViewState
+import com.mjpecora.listeningparty.ui.login.LoginViewState.CreateAccount.AccountType
 import com.mjpecora.listeningparty.util.tag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.mjpecora.listeningparty.ui.login.LoginViewState.CreateAccount.AccountType
 
 class LoginViewModel : ViewModel() {
 
@@ -28,7 +28,6 @@ class LoginViewModel : ViewModel() {
                     null
                 }
             }
-            Log.d(this@LoginViewModel.tag(), "${result?.user}")
         }
     }
 
@@ -43,4 +42,8 @@ sealed class LoginViewState : ViewState {
         enum class AccountType { GOOGLE }
 
     }
+}
+
+enum class Navigate {
+    HOME, CREATE_ACCOUNT
 }
