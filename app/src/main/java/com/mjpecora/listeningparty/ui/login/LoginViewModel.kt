@@ -1,6 +1,5 @@
 package com.mjpecora.listeningparty.ui.login
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthCredential
@@ -8,7 +7,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mjpecora.listeningparty.base.ViewState
 import com.mjpecora.listeningparty.ui.login.LoginViewState.CreateAccount.AccountType
-import com.mjpecora.listeningparty.util.tag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
