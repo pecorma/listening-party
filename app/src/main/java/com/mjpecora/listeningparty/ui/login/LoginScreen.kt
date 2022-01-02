@@ -52,6 +52,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
+import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.ui.Screen
 import com.mjpecora.listeningparty.ui.theme.Blue
 import com.mjpecora.listeningparty.ui.theme.Blue200
@@ -63,22 +64,23 @@ import com.mjpecora.listeningparty.ui.theme.lockIcon
 import com.mjpecora.listeningparty.ui.theme.mailIcon
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel, navigate: (Screen.Login.Destination) -> Unit) {
+fun LoginScreen(viewModel: LoginViewModel) {
     val viewState: LoginViewState by viewModel.viewState.collectAsState()
-    if (viewState is LoginViewState.Success) {
-        navigate(Screen.Login.Destination.HOME)
-    } else {
-        LoginView(viewModel)
-    }
+    val emailState = rememberSaveable { mutableStateOf("") }
+    val passwordState = rememberSaveable { mutableStateOf("") }
+    LoginView(viewModel = viewModel, emailState, passwordState)
 }
 
 @Composable
-private fun LoginView(viewModel: LoginViewModel) {
+private fun LoginView(
+    viewModel: LoginViewModel,
+    emailState: MutableState<String>,
+    passwordState: MutableState<String>
+) {
+
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) {
-        val emailState = remember { mutableStateOf("") }
-        val passwordState = remember { mutableStateOf("") }
         val focusRequester = List(3) { FocusRequester() }
 
         Column(
@@ -144,14 +146,12 @@ private fun SignUpView(viewModel: LoginViewModel) {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "Sign up.",
+            text = "Sign up!",
             style = MaterialTheme.typography.overline,
             color = if (isPressed) Blue else { Blue200 },
             modifier = Modifier
                 .clickable(interactionSource = interactionSource, indication = null) {
-                    viewModel.updateViewState(
-                        LoginViewState.Success(Screen.Login.Destination.CREATE_ACCOUNT)
-                    )
+                    viewModel.navigate(Navigator.NavTarget.Route(Screen.CreateAccount.route))
                 }
         )
     }
@@ -316,4 +316,4 @@ private fun LoginInputField(
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true, device = Devices.PIXEL)
-fun Preview() = LoginScreen(hiltViewModel()) {}
+fun Preview() = LoginScreen(hiltViewModel())

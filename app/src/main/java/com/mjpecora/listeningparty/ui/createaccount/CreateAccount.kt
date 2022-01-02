@@ -31,7 +31,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
-import com.mjpecora.listeningparty.ui.Screen
+import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.ui.login.horizontalButtonGradient
 import com.mjpecora.listeningparty.ui.theme.Blue200
 import com.mjpecora.listeningparty.ui.theme.Pink100
@@ -45,24 +45,18 @@ import com.mjpecora.listeningparty.ui.theme.userIcon
 
 @Composable
 fun CreateAccountScreen(
-    viewModel: CreateAccountViewModel,
-    navigate: (Screen.CreateAccount.Destination) -> Unit
+    viewModel: CreateAccountViewModel
 ) {
     val viewState = viewModel.viewState.collectAsState()
 
-    if (viewState.value is CreateAccountViewState.Success) {
-        navigate(Screen.CreateAccount.Destination.HOME)
-    } else {
-        CreateAccountView(viewModel = viewModel, viewState = viewState.value, navigate = navigate)
-    }
+    CreateAccountView(viewModel = viewModel, viewState = viewState.value)
 
 }
 
 @Composable
 private fun CreateAccountView(
     viewModel: CreateAccountViewModel,
-    viewState: CreateAccountViewState,
-    navigate: (Screen.CreateAccount.Destination) -> Unit
+    viewState: CreateAccountViewState
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -79,7 +73,7 @@ private fun CreateAccountView(
                 .padding(horizontal = 16.dp, vertical = 16.dp)
                 .systemBarsPadding()
         ) {
-            TopNavigation(navigate)
+            TopNavigation(viewModel)
             Spacer(Modifier.height(48.dp))
             CreateAccountInputField(
                 placeHolder = "email",
@@ -215,14 +209,14 @@ private fun OrWithDivider() {
 }
 
 @Composable
-private fun TopNavigation(navigateBack: (Screen.CreateAccount.Destination) -> Unit) {
+private fun TopNavigation(viewModel: CreateAccountViewModel) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
         IconButton(
-            onClick = { navigateBack(Screen.CreateAccount.Destination.BACK) },
+            onClick = { viewModel.navigate(Navigator.NavTarget.Pop) },
             modifier = Modifier.size(24.dp)
         ) {
             Icon(painter = arrowLeftIcon, contentDescription = "", tint = Color.White)

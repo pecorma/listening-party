@@ -3,44 +3,50 @@ package com.mjpecora.listeningparty.ui
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContentScope.SlideDirection
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.ui.createaccount.CreateAccountScreen
 import com.mjpecora.listeningparty.ui.home.Home
 import com.mjpecora.listeningparty.ui.login.LoginScreen
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @Composable
-fun LPApp(
-    appState: ListeningPartyAppState = rememberLPAppState(),
-) {
+fun LPApp(appState: ListeningPartyAppState) {
+
+    LaunchedEffect("navigation") {
+        appState.navigator.sharedFlow.onEach {
+            when (it) {
+                is Navigator.NavTarget.Pop -> appState.navController.popBackStack()
+                is Navigator.NavTarget.Route -> appState.navController.navigate(it.target)
+            }
+        }.launchIn(this)
+    }
+
     AnimatedNavHost(
         navController = appState.navController,
-        startDestination = Screen.Login.route
+        startDestination = Screen.Login.route,
+        exitTransition = { ExitTransition.None },
+        popExitTransition = { ExitTransition.None },
+        enterTransition = { EnterTransition.None },
+        popEnterTransition = { EnterTransition.None }
     ) {
-        rootComposable(route = Screen.Login.route) { backStackEntry ->
+        rootComposable(route = Screen.Login.route) {
             DisableBack()
-            LoginScreen(hiltViewModel()) {
-                when (it) {
-                    Screen.Login.Destination.HOME -> appState.navigateToHome(backStackEntry)
-                    Screen.Login.Destination.CREATE_ACCOUNT-> appState.navigateToCreateAccount(backStackEntry)
-                }
-            }
+            LoginScreen(hiltViewModel())
         }
 
-        screenComposable(route = Screen.CreateAccount.route) { backStackEntry ->
-            CreateAccountScreen(hiltViewModel()) {
-                when (it) {
-                    Screen.CreateAccount.Destination.HOME ->
-                        appState.navigateToHome(backStackEntry)
-
-                    Screen.CreateAccount.Destination.BACK -> appState.navigateBack()
-                }
-            }
+        screenComposable(route = Screen.CreateAccount.route) {
+            CreateAccountScreen(hiltViewModel())
         }
 
         screenComposable(route = Screen.Home.route) {
@@ -58,8 +64,10 @@ fun NavGraphBuilder.rootComposable(
 ) {
     composable(
         route = route,
-        enterTransition = { slideIntoContainer(SlideDirection.Right, tween(400)) },
+        enterTransition = { EnterTransition.None  },
         exitTransition = { slideOutOfContainer(SlideDirection.Left, tween(400)) },
+        popEnterTransition = { slideIntoContainer(SlideDirection.Right, tween(400)) },
+        popExitTransition = { ExitTransition.None },
         content = content
     )
 }
@@ -72,6 +80,8 @@ fun NavGraphBuilder.screenComposable(
         route = route,
         enterTransition = { slideIntoContainer(SlideDirection.Left, tween(400)) },
         exitTransition = { slideOutOfContainer(SlideDirection.Right, tween(400)) },
+        popEnterTransition = { slideIntoContainer(SlideDirection.Left, tween(400)) },
+        popExitTransition = { slideOutOfContainer(SlideDirection.Right, tween(400)) },
         content = content
     )
 }
