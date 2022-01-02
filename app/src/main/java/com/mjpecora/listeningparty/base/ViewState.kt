@@ -1,3 +1,5 @@
 package com.mjpecora.listeningparty.base
 
-interface ViewState
+interface ViewState {
+    object Loading
+}

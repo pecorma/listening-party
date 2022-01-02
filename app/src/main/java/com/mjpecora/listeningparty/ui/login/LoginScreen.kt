@@ -20,6 +20,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +33,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -43,6 +45,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
+import com.mjpecora.listeningparty.ui.Screen
 import com.mjpecora.listeningparty.ui.theme.Blue
 import com.mjpecora.listeningparty.ui.theme.Blue200
 import com.mjpecora.listeningparty.ui.theme.Pink100
@@ -50,17 +53,25 @@ import com.mjpecora.listeningparty.ui.theme.eyeClosedIcon
 import com.mjpecora.listeningparty.ui.theme.eyeOpenIcon
 import com.mjpecora.listeningparty.ui.theme.googleGIcon
 import com.mjpecora.listeningparty.ui.theme.lockIcon
-import com.mjpecora.listeningparty.ui.theme.userIcon
+import com.mjpecora.listeningparty.ui.theme.mailIcon
 
 @Composable
-fun Login(loginViewModel: LoginViewModel, navigate: (Navigate) -> Unit) {
-    val viewState: LoginViewState by loginViewModel.viewState.collectAsState()
-    if (viewState is LoginViewState.CreateAccount) {
-        navigate(Navigate.CREATE_ACCOUNT)
+fun LoginScreen(viewModel: LoginViewModel, navigate: (Screen.Login.Destination) -> Unit) {
+    val viewState: LoginViewState by viewModel.viewState.collectAsState()
+    if (viewState is LoginViewState.Success) {
+        navigate(Screen.Login.Destination.HOME)
+    } else {
+        LoginView(viewModel)
     }
+}
+
+@Composable
+private fun LoginView(viewModel: LoginViewModel) {
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) {
+        val emailState = remember { mutableStateOf("") }
+        val passwordState = remember { mutableStateOf("") }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -73,30 +84,37 @@ fun Login(loginViewModel: LoginViewModel, navigate: (Navigate) -> Unit) {
                 style = MaterialTheme.typography.h5,
             )
             Spacer(modifier = Modifier.height(24.dp))
-            LoginInputField("username", userIcon, LoginInputField.USERNAME)
+            LoginInputField(
+                "email",
+                mailIcon,
+                KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+                emailState
+            )
             Spacer(modifier = Modifier.height(16.dp))
-            LoginInputField("password", lockIcon, LoginInputField.PASSWORD)
+            LoginInputField(
+                "password",
+                lockIcon,
+                KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Go),
+                passwordState
+            )
             Spacer(modifier = Modifier.height(24.dp))
-            LoginButton(navigate)
+            LoginButton(viewModel, emailState.value.trim(), passwordState.value.trim())
             Spacer(modifier = Modifier.height(16.dp))
-            SignUpView(navigate)
+            SignUpView(viewModel)
             Spacer(modifier = Modifier.height(64.dp))
             ConnectWithDivider()
             Spacer(modifier = Modifier.height(32.dp))
-            GoogleLoginButton(loginViewModel)
+            GoogleLoginButton(viewModel)
         }
     }
 }
-
-private enum class LoginInputField { PASSWORD, USERNAME }
 
 internal val horizontalButtonGradient = Brush.horizontalGradient(
     colors = listOf(Color(0xFF008FF1), Color(0xFF61BBFE))
 )
 
-
 @Composable
-private fun SignUpView(navigate: (Navigate) -> Unit) {
+private fun SignUpView(viewModel: LoginViewModel) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -112,16 +130,18 @@ private fun SignUpView(navigate: (Navigate) -> Unit) {
             color = if (isPressed) Blue else { Blue200 },
             modifier = Modifier
                 .clickable(interactionSource = interactionSource, indication = null) {
-                    navigate(Navigate.CREATE_ACCOUNT)
+                    viewModel.updateViewState(
+                        LoginViewState.Success(Screen.Login.Destination.CREATE_ACCOUNT)
+                    )
                 }
         )
     }
 }
 
 @Composable
-private fun LoginButton(navigate: (Navigate) -> Unit) {
+private fun LoginButton(viewModel: LoginViewModel, email: String, password: String) {
     Button(
-        onClick = { navigate(Navigate.HOME) },
+        onClick = { viewModel.signInWithEmailPassword(email, password) },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
         contentPadding = PaddingValues(),
         elevation = ButtonDefaults.elevation(4.dp),
@@ -199,8 +219,12 @@ private fun ConnectWithDivider() {
 }
 
 @Composable
-private fun LoginInputField(placeHolder: String, leadingIcon: Painter, field: LoginInputField) {
-    val input = rememberSaveable { mutableStateOf("") }
+private fun LoginInputField(
+    placeHolder: String,
+    leadingIcon: Painter,
+    keyboardOptions: KeyboardOptions,
+    input: MutableState<String>
+) {
     val isVisible = rememberSaveable { mutableStateOf(false) }
     val isTinted = rememberSaveable { mutableStateOf(false) }
 
@@ -219,13 +243,13 @@ private fun LoginInputField(placeHolder: String, leadingIcon: Painter, field: Lo
         leadingIcon = {
             Icon(leadingIcon, "", tint = if (isTinted.value) { Blue200 } else { Color.White })
         },
-        visualTransformation = if (field == LoginInputField.PASSWORD && !isVisible.value) {
+        visualTransformation = if (keyboardOptions.keyboardType == KeyboardType.Password && !isVisible.value) {
             PasswordVisualTransformation()
         } else {
             VisualTransformation.None
         },
         trailingIcon = {
-            if (field == LoginInputField.PASSWORD) {
+            if (keyboardOptions.keyboardType == KeyboardType.Password) {
                 Icon(
                     if (isVisible.value) { eyeOpenIcon } else { eyeClosedIcon },
                     "",
@@ -234,15 +258,13 @@ private fun LoginInputField(placeHolder: String, leadingIcon: Painter, field: Lo
                         .clickable(
                             interactionSource = MutableInteractionSource(),
                             indication = null
-                        ) { isVisible.value = isVisible.value.not() }
+                        ) {
+                            isVisible.value = isVisible.value.not()
+                        }
                 )
             }
         },
-        keyboardOptions = KeyboardOptions(keyboardType = if (field == LoginInputField.PASSWORD) {
-            KeyboardType.Password
-        } else {
-            KeyboardType.Text
-        }),
+        keyboardOptions = keyboardOptions,
         modifier = Modifier
             .fillMaxWidth()
             .onFocusChanged { isTinted.value = it.hasFocus }
@@ -251,4 +273,4 @@ private fun LoginInputField(placeHolder: String, leadingIcon: Painter, field: Lo
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true, device = Devices.PIXEL)
-fun Preview() = Login(hiltViewModel()) {}
+fun Preview() = LoginScreen(hiltViewModel()) {}

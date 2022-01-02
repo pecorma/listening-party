@@ -1,32 +1,50 @@
 package com.mjpecora.listeningparty.ui.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mjpecora.listeningparty.base.ViewState
-import com.mjpecora.listeningparty.ui.login.LoginViewState.CreateAccount.AccountType
+import com.mjpecora.listeningparty.ui.Screen
+import com.mjpecora.listeningparty.util.tag
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val firebaseAuth: FirebaseAuth
+): ViewModel() {
 
     val viewState = MutableStateFlow<LoginViewState>(LoginViewState.Idle)
 
     fun signInWithAuthCredential(credential: AuthCredential) {
         viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 try {
-                    Firebase.auth.signInWithCredential(credential).result
+                    Firebase.auth.signInWithCredential(credential)
                 } catch (e: Exception) {
-                    viewState.emit(LoginViewState.CreateAccount(AccountType.GOOGLE))
-                    null
+                    Log.d(this@LoginViewModel.tag(), "failed firebase sign in.")
                 }
             }
         }
+    }
+
+    fun signInWithEmailPassword(email: String, password: String) {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                updateViewState(LoginViewState.Success(Screen.Login.Destination.HOME))
+            }
+    }
+
+    fun updateViewState(viewState: LoginViewState) = viewModelScope.launch {
+        this@LoginViewModel.viewState.emit(viewState)
     }
 
 }
@@ -34,14 +52,5 @@ class LoginViewModel : ViewModel() {
 sealed class LoginViewState : ViewState {
     object Idle : LoginViewState()
     object Loading : LoginViewState()
-
-    data class CreateAccount(val type: AccountType) : LoginViewState() {
-
-        enum class AccountType { GOOGLE }
-
-    }
-}
-
-enum class Navigate {
-    HOME, CREATE_ACCOUNT
+    data class Success(val destination: Screen.Login.Destination) : LoginViewState()
 }

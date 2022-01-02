@@ -10,9 +10,9 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
-import com.mjpecora.listeningparty.ui.createaccount.CreateAccount
-import com.mjpecora.listeningparty.ui.login.Login
-import com.mjpecora.listeningparty.ui.login.Navigate
+import com.mjpecora.listeningparty.ui.createaccount.CreateAccountScreen
+import com.mjpecora.listeningparty.ui.home.Home
+import com.mjpecora.listeningparty.ui.login.LoginScreen
 
 @Composable
 fun LPApp(
@@ -24,26 +24,33 @@ fun LPApp(
     ) {
         rootComposable(route = Screen.Login.route) { backStackEntry ->
             DisableBack()
-            Login(hiltViewModel()) {
+            LoginScreen(hiltViewModel()) {
                 when (it) {
-                    Navigate.HOME -> appState.navigateToHome(backStackEntry)
-                    Navigate.CREATE_ACCOUNT -> appState.navigateToCreateAccount(backStackEntry)
+                    Screen.Login.Destination.HOME -> appState.navigateToHome(backStackEntry)
+                    Screen.Login.Destination.CREATE_ACCOUNT-> appState.navigateToCreateAccount(backStackEntry)
                 }
             }
         }
 
-        screenComposable(route = Screen.CreateAccount.route) {
-            CreateAccount(hiltViewModel()) {
-                appState.navigateBack()
+        screenComposable(route = Screen.CreateAccount.route) { backStackEntry ->
+            CreateAccountScreen(hiltViewModel()) {
+                when (it) {
+                    Screen.CreateAccount.Destination.HOME ->
+                        appState.navigateToHome(backStackEntry)
+
+                    Screen.CreateAccount.Destination.BACK -> appState.navigateBack()
+                }
             }
+        }
+
+        screenComposable(route = Screen.Home.route) {
+            Home(hiltViewModel())
         }
     }
 }
 
 @Composable
-fun DisableBack() {
-    BackHandler(true) {}
-}
+fun DisableBack() = BackHandler(true) {}
 
 fun NavGraphBuilder.rootComposable(
     route: String,

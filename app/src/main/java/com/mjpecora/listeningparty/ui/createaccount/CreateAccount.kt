@@ -9,18 +9,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Divider
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +23,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.systemBarsPadding
@@ -35,6 +31,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
+import com.mjpecora.listeningparty.ui.Screen
 import com.mjpecora.listeningparty.ui.login.horizontalButtonGradient
 import com.mjpecora.listeningparty.ui.theme.Blue200
 import com.mjpecora.listeningparty.ui.theme.Pink100
@@ -47,10 +44,33 @@ import com.mjpecora.listeningparty.ui.theme.mailIcon
 import com.mjpecora.listeningparty.ui.theme.userIcon
 
 @Composable
-fun CreateAccount(viewModel: CreateAccountViewModel, navigateBack: () -> Unit) {
+fun CreateAccountScreen(
+    viewModel: CreateAccountViewModel,
+    navigate: (Screen.CreateAccount.Destination) -> Unit
+) {
+    val viewState = viewModel.viewState.collectAsState()
+
+    if (viewState.value is CreateAccountViewState.Success) {
+        navigate(Screen.CreateAccount.Destination.HOME)
+    } else {
+        CreateAccountView(viewModel = viewModel, viewState = viewState.value, navigate = navigate)
+    }
+
+}
+
+@Composable
+private fun CreateAccountView(
+    viewModel: CreateAccountViewModel,
+    viewState: CreateAccountViewState,
+    navigate: (Screen.CreateAccount.Destination) -> Unit
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) {
+        val emailState = remember { mutableStateOf("") }
+        val passwordState = remember { mutableStateOf("") }
+        val usernameState = remember { mutableStateOf("") }
+
         Column(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top,
@@ -59,27 +79,36 @@ fun CreateAccount(viewModel: CreateAccountViewModel, navigateBack: () -> Unit) {
                 .padding(horizontal = 16.dp, vertical = 16.dp)
                 .systemBarsPadding()
         ) {
-            TopNavigation(navigateBack)
+            TopNavigation(navigate)
             Spacer(Modifier.height(48.dp))
             CreateAccountInputField(
                 placeHolder = "email",
                 leadingIcon = mailIcon,
-                keyboardType = KeyboardType.Email
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+                textState = emailState
             )
             Spacer(Modifier.height(16.dp))
             CreateAccountInputField(
                 placeHolder = "password",
                 leadingIcon = lockIcon,
-                keyboardType = KeyboardType.Password
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
+                textState = passwordState
             )
             Spacer(Modifier.height(16.dp))
             CreateAccountInputField(
                 placeHolder = "username",
                 leadingIcon = userIcon,
-                keyboardType = KeyboardType.Text
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Go),
+                textState = usernameState
             )
             Spacer(Modifier.height(16.dp))
-            SignUpButton()
+            SignUpButton(
+                viewModel,
+                viewState,
+                emailState.value.trim(),
+                passwordState.value.trim(),
+                usernameState.value.trim()
+            )
             Spacer(Modifier.height(48.dp))
             OrWithDivider()
             Spacer(modifier = Modifier.height(32.dp))
@@ -89,10 +118,16 @@ fun CreateAccount(viewModel: CreateAccountViewModel, navigateBack: () -> Unit) {
 }
 
 @Composable
-private fun SignUpButton() {
+private fun SignUpButton(
+    viewModel: CreateAccountViewModel,
+    viewState: CreateAccountViewState,
+    email: String,
+    password: String,
+    userName: String
+) {
     Row(modifier = Modifier.padding(horizontal = 16.dp)) {
         Button(
-            onClick = { /* TODO() */ },
+            onClick = { viewModel.createUser(email, password, userName) },
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
             contentPadding = PaddingValues(),
             elevation = ButtonDefaults.elevation(4.dp),
@@ -105,7 +140,13 @@ private fun SignUpButton() {
                     .fillMaxWidth()
                     .height(ButtonDefaults.MinHeight)
             ) {
-                Text("Sign up")
+                if (viewState is CreateAccountViewState.Loading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(ButtonDefaults.MinHeight.times(0.9f))
+                    )
+                } else {
+                    Text("Sign up")
+                }
             }
         }
     }
@@ -159,7 +200,9 @@ private fun GoogleSignUpButton(viewModel: CreateAccountViewModel) {
 @Composable
 private fun OrWithDivider() {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -172,13 +215,16 @@ private fun OrWithDivider() {
 }
 
 @Composable
-private fun TopNavigation(navigateBack: () -> Unit) {
+private fun TopNavigation(navigateBack: (Screen.CreateAccount.Destination) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
-        IconButton(onClick = { navigateBack() }, modifier = Modifier.size(24.dp)) {
+        IconButton(
+            onClick = { navigateBack(Screen.CreateAccount.Destination.BACK) },
+            modifier = Modifier.size(24.dp)
+        ) {
             Icon(painter = arrowLeftIcon, contentDescription = "", tint = Color.White)
         }
         Text("Create account", style = MaterialTheme.typography.subtitle1)
@@ -190,9 +236,9 @@ private fun TopNavigation(navigateBack: () -> Unit) {
 private fun CreateAccountInputField(
     placeHolder: String,
     leadingIcon: Painter,
-    keyboardType: KeyboardType
+    keyboardOptions: KeyboardOptions,
+    textState: MutableState<String>
 ) {
-    val input = rememberSaveable { mutableStateOf("") }
     val isTinted = rememberSaveable { mutableStateOf(false) }
     val isVisible = rememberSaveable { mutableStateOf(false) }
     Row(
@@ -201,8 +247,10 @@ private fun CreateAccountInputField(
             .padding(horizontal = 16.dp)
     ) {
         OutlinedTextField(
-            value = input.value,
-            onValueChange = { input.value = it },
+            value = textState.value,
+            onValueChange = {
+                textState.value = it
+            },
             textStyle = MaterialTheme.typography.body1,
             placeholder = { Text(placeHolder) },
             singleLine = true,
@@ -216,7 +264,7 @@ private fun CreateAccountInputField(
                 androidx.compose.material.Icon(leadingIcon, "", tint = if (isTinted.value) { Blue200 } else { Color.White })
             },
             trailingIcon = {
-                if (keyboardType == KeyboardType.Password) {
+                if (keyboardOptions.keyboardType == KeyboardType.Password) {
                     Icon(
                         if (isVisible.value) { eyeOpenIcon } else { eyeClosedIcon },
                         "",
@@ -229,7 +277,7 @@ private fun CreateAccountInputField(
                     )
                 }
             },
-            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            keyboardOptions = keyboardOptions,
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { isTinted.value = it.hasFocus }

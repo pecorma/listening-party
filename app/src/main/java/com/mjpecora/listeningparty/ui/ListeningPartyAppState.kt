@@ -10,9 +10,17 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 sealed class Screen(val route: String) {
-    object Login : Screen("login")
+    object Login : Screen("login") {
+        enum class Destination {
+            HOME, CREATE_ACCOUNT
+        }
+    }
     object Home : Screen("home")
-    object CreateAccount : Screen("createAccount")
+    object CreateAccount : Screen("createAccount") {
+        enum class Destination {
+            HOME, BACK
+        }
+    }
 }
 
 @Composable
