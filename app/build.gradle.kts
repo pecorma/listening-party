@@ -1,5 +1,5 @@
-import com.mjpecora.listeningparty.buildsrc.Libs
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import com.mjpecora.listeningparty.buildsrc.Libs
 
 plugins {
     id("com.android.application")
@@ -60,6 +60,7 @@ android {
                 add("-Xopt-in=coil.annotation.ExperimentalCoilApi")
                 add("-Xopt-in=androidx.compose.material.ExperimentalMaterialApi")
                 add("-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi")
+                add("-Xopt-in=androidx.compose.ui.ExperimentalComposeUiApi")
             }
         }
     }

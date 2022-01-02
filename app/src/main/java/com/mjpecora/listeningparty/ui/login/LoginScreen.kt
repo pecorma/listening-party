@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -28,13 +29,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.KeyboardType.Companion.Email
+import androidx.compose.ui.text.input.KeyboardType.Companion.Password
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Devices
@@ -72,6 +79,8 @@ private fun LoginView(viewModel: LoginViewModel) {
     ) {
         val emailState = remember { mutableStateOf("") }
         val passwordState = remember { mutableStateOf("") }
+        val focusRequester = List(3) { FocusRequester() }
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -85,17 +94,27 @@ private fun LoginView(viewModel: LoginViewModel) {
             )
             Spacer(modifier = Modifier.height(24.dp))
             LoginInputField(
+                viewModel,
                 "email",
                 mailIcon,
-                KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
-                emailState
+                KeyboardOptions(keyboardType = Email, imeAction = ImeAction.Next),
+                emailState,
+                focusRequester[0],
+                focusRequester[1],
+                emailState.value.trim(),
+                passwordState.value.trim()
             )
             Spacer(modifier = Modifier.height(16.dp))
             LoginInputField(
+                viewModel,
                 "password",
                 lockIcon,
-                KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Go),
-                passwordState
+                KeyboardOptions(keyboardType = Password, imeAction = ImeAction.Go),
+                passwordState,
+                focusRequester[1],
+                focusRequester[2],
+                emailState.value.trim(),
+                passwordState.value.trim()
             )
             Spacer(modifier = Modifier.height(24.dp))
             LoginButton(viewModel, emailState.value.trim(), passwordState.value.trim())
@@ -220,14 +239,18 @@ private fun ConnectWithDivider() {
 
 @Composable
 private fun LoginInputField(
+    viewModel: LoginViewModel,
     placeHolder: String,
     leadingIcon: Painter,
     keyboardOptions: KeyboardOptions,
-    input: MutableState<String>
+    input: MutableState<String>,
+    focusRequester: FocusRequester,
+    nextFocusRequester: FocusRequester,
+    email: String,
+    password: String
 ) {
     val isVisible = rememberSaveable { mutableStateOf(false) }
     val isTinted = rememberSaveable { mutableStateOf(false) }
-
     OutlinedTextField(
         value = input.value,
         onValueChange = { input.value = it },
@@ -243,13 +266,13 @@ private fun LoginInputField(
         leadingIcon = {
             Icon(leadingIcon, "", tint = if (isTinted.value) { Blue200 } else { Color.White })
         },
-        visualTransformation = if (keyboardOptions.keyboardType == KeyboardType.Password && !isVisible.value) {
+        visualTransformation = if (keyboardOptions.keyboardType == Password && !isVisible.value) {
             PasswordVisualTransformation()
         } else {
             VisualTransformation.None
         },
         trailingIcon = {
-            if (keyboardOptions.keyboardType == KeyboardType.Password) {
+            if (keyboardOptions.keyboardType == Password) {
                 Icon(
                     if (isVisible.value) { eyeOpenIcon } else { eyeClosedIcon },
                     "",
@@ -265,8 +288,28 @@ private fun LoginInputField(
             }
         },
         keyboardOptions = keyboardOptions,
+        keyboardActions = KeyboardActions(
+            onNext = {
+                nextFocusRequester.requestFocus()
+            },
+            onGo = {
+                viewModel.signInWithEmailPassword(email, password)
+            }
+        ),
         modifier = Modifier
             .fillMaxWidth()
+            .focusRequester(focusRequester)
+            .onKeyEvent {
+                if (keyboardOptions.keyboardType == Password && it.key.keyCode == Key.Enter.keyCode) {
+                    viewModel.signInWithEmailPassword(email, password)
+                    true
+                } else if (keyboardOptions.keyboardType == Email && it.key.keyCode == Key.Tab.keyCode) {
+                    nextFocusRequester.requestFocus()
+                    true
+                } else {
+                    false
+                }
+            }
             .onFocusChanged { isTinted.value = it.hasFocus }
     )
 }
