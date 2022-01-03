@@ -6,6 +6,7 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.base.ViewModel
 import com.mjpecora.listeningparty.base.ViewState
 import com.mjpecora.listeningparty.ui.Screen
@@ -39,10 +40,9 @@ class LoginViewModel @Inject constructor(
     fun signInWithEmailPassword(email: String, password: String) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                updateViewState(LoginViewState.Success(Screen.Login.Destination.HOME))
+                navigate(Navigator.NavTarget.Route(Screen.Home.route))
             }
     }
-
 
     private fun updateViewState(viewState: LoginViewState) = viewModelScope.launch {
         this@LoginViewModel.viewState.emit(viewState)
@@ -53,5 +53,5 @@ class LoginViewModel @Inject constructor(
 sealed class LoginViewState : ViewState {
     object Idle : LoginViewState()
     object Loading : LoginViewState()
-    data class Success(val destination: Screen.Login.Destination) : LoginViewState()
+    object Success : LoginViewState()
 }

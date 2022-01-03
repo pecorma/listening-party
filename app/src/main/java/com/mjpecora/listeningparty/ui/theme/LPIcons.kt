@@ -26,3 +26,6 @@ val arrowLeftIcon: Painter
 
 val mailIcon: Painter
     @Composable get() = painterResource(id = R.drawable.ic_mail)
+
+val userCircleIcon: Painter
+    @Composable get() = painterResource(id = R.drawable.ic_user_circle)

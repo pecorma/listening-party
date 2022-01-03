@@ -13,7 +13,7 @@ class Navigator {
 
     sealed class NavTarget {
         object Pop : NavTarget()
-        data class Route(val target: String) : NavTarget()
+        data class Route(val route: String) : NavTarget()
     }
 
 }

@@ -1,7 +1,10 @@
 package com.mjpecora.listeningparty.ui.theme
 
 import androidx.compose.material.darkColors
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
 
 val Red300 = Color(0xFFEA6D7E)
 val Black900 = Color(0xFF121212)
@@ -17,4 +20,14 @@ val LPColors = darkColors(
     onSecondary = Black900,
     error = Red300,
     onError = Black900,
+)
+
+val horizontalButtonGradient = Brush.horizontalGradient(
+    colors = listOf(Color(0xFF008FF1), Color(0xFF61BBFE))
+)
+
+val blueToBlackGradient = Brush.sweepGradient(
+    0.0f to Blue200,
+    1.0f to Black900,
+    center = Offset(0f, 0f),
 )

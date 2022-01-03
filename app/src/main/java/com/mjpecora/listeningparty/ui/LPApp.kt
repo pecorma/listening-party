@@ -6,6 +6,8 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,6 +19,7 @@ import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.ui.createaccount.CreateAccountScreen
 import com.mjpecora.listeningparty.ui.home.Home
 import com.mjpecora.listeningparty.ui.login.LoginScreen
+import com.mjpecora.listeningparty.ui.splashscreen.SplashScreen
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -27,19 +30,27 @@ fun LPApp(appState: ListeningPartyAppState) {
         appState.navigator.sharedFlow.onEach {
             when (it) {
                 is Navigator.NavTarget.Pop -> appState.navController.popBackStack()
-                is Navigator.NavTarget.Route -> appState.navController.navigate(it.target)
+                is Navigator.NavTarget.Route -> appState.navController.navigate(it.route)
             }
         }.launchIn(this)
     }
 
     AnimatedNavHost(
         navController = appState.navController,
-        startDestination = Screen.Login.route,
+        startDestination = Screen.Splash.route,
         exitTransition = { ExitTransition.None },
         popExitTransition = { ExitTransition.None },
         enterTransition = { EnterTransition.None },
         popEnterTransition = { EnterTransition.None }
     ) {
+        composable(
+            route = Screen.Splash.route,
+            exitTransition = { fadeOut(tween(400)) }
+        ) {
+            DisableBack()
+            SplashScreen(hiltViewModel())
+        }
+
         rootComposable(route = Screen.Login.route) {
             DisableBack()
             LoginScreen(hiltViewModel())
@@ -49,7 +60,8 @@ fun LPApp(appState: ListeningPartyAppState) {
             CreateAccountScreen(hiltViewModel())
         }
 
-        screenComposable(route = Screen.Home.route) {
+        rootComposable(route = Screen.Home.route) {
+            DisableBack()
             Home(hiltViewModel())
         }
     }
@@ -64,7 +76,7 @@ fun NavGraphBuilder.rootComposable(
 ) {
     composable(
         route = route,
-        enterTransition = { EnterTransition.None  },
+        enterTransition = { fadeIn(tween(400))  },
         exitTransition = { slideOutOfContainer(SlideDirection.Left, tween(400)) },
         popEnterTransition = { slideIntoContainer(SlideDirection.Right, tween(400)) },
         popExitTransition = { ExitTransition.None },

@@ -122,7 +122,6 @@ dependencies {
     implementation(Libs.AndroidX.Palette.palette)
     implementation(Libs.AndroidX.Paging.runtimeKtx)
     implementation(Libs.AndroidX.Paging.compose)
-    implementation(Libs.AndroidX.Compose.material3)
     implementation(Libs.Accompanist.insets)
     implementation(Libs.Accompanist.navigationAnimations)
     implementation(Libs.AndroidX.Compose.foundation)

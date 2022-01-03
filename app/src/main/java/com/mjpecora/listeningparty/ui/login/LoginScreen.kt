@@ -60,6 +60,7 @@ import com.mjpecora.listeningparty.ui.theme.Pink100
 import com.mjpecora.listeningparty.ui.theme.eyeClosedIcon
 import com.mjpecora.listeningparty.ui.theme.eyeOpenIcon
 import com.mjpecora.listeningparty.ui.theme.googleGIcon
+import com.mjpecora.listeningparty.ui.theme.horizontalButtonGradient
 import com.mjpecora.listeningparty.ui.theme.lockIcon
 import com.mjpecora.listeningparty.ui.theme.mailIcon
 
@@ -129,10 +130,6 @@ private fun LoginView(
         }
     }
 }
-
-internal val horizontalButtonGradient = Brush.horizontalGradient(
-    colors = listOf(Color(0xFF008FF1), Color(0xFF61BBFE))
-)
 
 @Composable
 private fun SignUpView(viewModel: LoginViewModel) {

@@ -2,10 +2,12 @@ package com.mjpecora.listeningparty.ui.createaccount
 
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.base.ViewModel
 import com.mjpecora.listeningparty.base.ViewState
 import com.mjpecora.listeningparty.model.cache.User
 import com.mjpecora.listeningparty.model.cache.UserDao
+import com.mjpecora.listeningparty.ui.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,14 +27,12 @@ class CreateAccountViewModel @Inject constructor(
         viewState.emit(CreateAccountViewState.Loading)
         firebaseAuth
             .createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
+            .addOnSuccessListener {
                 viewModelScope.launch {
-                    if (it.isSuccessful) {
-                        withContext(Dispatchers.IO) {
-                            userDao.insertUser(User(userName = userName))
-                        }
-                        viewState.emit(CreateAccountViewState.Success)
+                    withContext(Dispatchers.IO) {
+                        userDao.insertUser(User(userName = userName))
                     }
+                    navigate(Navigator.NavTarget.Route(Screen.Home.route))
                 }
             }
     }

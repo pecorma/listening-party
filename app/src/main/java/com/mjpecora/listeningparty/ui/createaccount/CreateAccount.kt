@@ -10,7 +10,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -32,16 +31,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.mjpecora.listeningparty.base.Navigator
-import com.mjpecora.listeningparty.ui.login.horizontalButtonGradient
-import com.mjpecora.listeningparty.ui.theme.Blue200
-import com.mjpecora.listeningparty.ui.theme.Pink100
-import com.mjpecora.listeningparty.ui.theme.arrowLeftIcon
-import com.mjpecora.listeningparty.ui.theme.eyeClosedIcon
-import com.mjpecora.listeningparty.ui.theme.eyeOpenIcon
-import com.mjpecora.listeningparty.ui.theme.googleGIcon
-import com.mjpecora.listeningparty.ui.theme.lockIcon
-import com.mjpecora.listeningparty.ui.theme.mailIcon
-import com.mjpecora.listeningparty.ui.theme.userIcon
+import com.mjpecora.listeningparty.ui.theme.*
 
 @Composable
 fun CreateAccountScreen(
@@ -52,6 +42,7 @@ fun CreateAccountScreen(
     CreateAccountView(viewModel = viewModel, viewState = viewState.value)
 
 }
+
 
 @Composable
 private fun CreateAccountView(

@@ -9,7 +9,9 @@ open class ViewModel : ViewModel() {
     @Inject lateinit var navigator: Navigator
 
     fun navigate(navTarget: NavTarget) {
-        navigator.navigateTo(navTarget)
+        if (::navigator.isInitialized) {
+            navigator.navigateTo(navTarget)
+        }
     }
 
 }
