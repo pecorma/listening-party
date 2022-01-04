@@ -47,9 +47,9 @@ object Libs {
         }
 
         object Lifecycle {
-            private const val version = "2.2.0"
+            private const val version = "2.4.0"
 
-            const val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
+            const val extensions = "androidx.lifecycle:lifecycle-extensions:2.2.0"
             const val livedataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
             const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
 
@@ -96,7 +96,7 @@ object Libs {
     }
 
     object Coroutines {
-        private const val version = "1.5.2"
+        private const val version = "1.6.0"
         const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
     }
@@ -143,7 +143,7 @@ object Libs {
         private const val converterVersion = "0.8.0"
         const val serializationConverter = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$converterVersion"
 
-        private const val serializationVersion = "1.3.1"
+        private const val serializationVersion = "1.3.2"
         const val serializationCore = "org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion"
         const val serializationJson = "org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion"
     }
