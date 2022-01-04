@@ -19,6 +19,7 @@ import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.ui.createaccount.CreateAccountScreen
 import com.mjpecora.listeningparty.ui.home.Home
 import com.mjpecora.listeningparty.ui.login.LoginScreen
+import com.mjpecora.listeningparty.ui.profile.ProfileScreen
 import com.mjpecora.listeningparty.ui.splashscreen.SplashScreen
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -63,6 +64,10 @@ fun LPApp(appState: ListeningPartyAppState) {
         rootComposable(route = Screen.Home.route) {
             DisableBack()
             Home(hiltViewModel())
+        }
+
+        screenComposable(route = Screen.Profile.route) {
+            ProfileScreen(hiltViewModel())
         }
     }
 }

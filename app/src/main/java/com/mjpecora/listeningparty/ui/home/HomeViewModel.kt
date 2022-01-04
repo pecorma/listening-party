@@ -1,7 +1,7 @@
 package com.mjpecora.listeningparty.ui.home
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mjpecora.listeningparty.base.ViewModel
 import com.mjpecora.listeningparty.base.ViewState
 import com.mjpecora.listeningparty.model.cache.User
 import com.mjpecora.listeningparty.model.cache.UserDao

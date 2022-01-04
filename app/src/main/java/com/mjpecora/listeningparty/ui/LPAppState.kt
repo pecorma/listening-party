@@ -8,6 +8,7 @@ sealed class Screen(val route: String) {
     object Login : Screen("login")
     object Home : Screen("home")
     object CreateAccount : Screen("createAccount")
+    object Profile : Screen("profile")
 }
 
 data class ListeningPartyAppState(val navController: NavHostController, val navigator: Navigator)

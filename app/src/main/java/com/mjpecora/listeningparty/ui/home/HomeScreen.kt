@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.systemBarsPadding
+import com.mjpecora.listeningparty.base.Navigator
+import com.mjpecora.listeningparty.ui.Screen
 import com.mjpecora.listeningparty.ui.theme.userCircleIcon
 
 @Composable
@@ -21,7 +23,7 @@ fun Home(viewModel: HomeViewModel) {
     Scaffold(Modifier.fillMaxSize()) {
         when (val currentViewState = viewState.value) {
             HomeViewState.Loading -> Loading()
-            is HomeViewState.Idle -> Idle(currentViewState)
+            is HomeViewState.Idle -> Idle(viewModel, currentViewState)
         }
     }
 }
@@ -40,7 +42,7 @@ private fun Loading() {
 }
 
 @Composable
-private fun Idle(viewState: HomeViewState.Idle) {
+private fun Idle(viewModel: HomeViewModel, viewState: HomeViewState.Idle) {
     Column(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top,
@@ -56,7 +58,12 @@ private fun Idle(viewState: HomeViewState.Idle) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("Welcome, ${viewState.user.userName}")
-            IconButton(onClick = { /*TODO*/ }, modifier = Modifier.size(24.dp)) {
+            IconButton(
+                onClick = {
+                    viewModel.navigate(Navigator.NavTarget.Route(Screen.Profile.route))
+                },
+                modifier = Modifier.size(24.dp)
+            ) {
                 Icon(painter = userCircleIcon, contentDescription = "", tint = Color.White)
             }
         }
