@@ -139,6 +139,7 @@ dependencies {
     implementation(platform(Libs.Firebase.bom))
     implementation(Libs.Firebase.auth)
     implementation(Libs.Google.auth)
+    implementation(Libs.Firebase.authUi)
 
     implementation(Libs.AndroidX.Room.room)
     implementation(Libs.AndroidX.Room.ktx)

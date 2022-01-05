@@ -1,6 +1,7 @@
 package com.mjpecora.listeningparty.di
 
 import android.content.Context
+import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.auth.api.signin.GoogleSignIn.getClient
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -20,6 +21,10 @@ object AuthenticationModule {
     @Provides
     @Singleton
     fun provideFirebaseAuth() = Firebase.auth
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAuthUi() = AuthUI.getInstance()
 
     @Provides
     @Singleton
