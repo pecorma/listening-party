@@ -7,7 +7,6 @@ import com.mjpecora.listeningparty.model.cache.User
 import com.mjpecora.listeningparty.model.cache.UserDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

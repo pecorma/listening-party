@@ -4,7 +4,6 @@ import androidx.compose.material.darkColors
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.TileMode
 
 val Red300 = Color(0xFFEA6D7E)
 val Black900 = Color(0xFF121212)

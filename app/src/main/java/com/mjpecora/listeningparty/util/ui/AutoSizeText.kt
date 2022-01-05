@@ -37,8 +37,7 @@ fun AutoSizeText(
         text = text,
         softWrap = false,
         style = scaledTextStyle.value,
-        modifier = modifier
-            .drawWithContent { if (readyToDraw.value) drawContent() },
+        modifier = modifier.drawWithContent { if (readyToDraw.value) drawContent() },
         textAlign = TextAlign.Center,
         onTextLayout = autoSizeText(readyToDraw, scaledTextStyle)
     )
