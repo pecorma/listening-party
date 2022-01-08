@@ -28,8 +28,8 @@ object Libs {
         }
 
         object ConstraintLayout {
-            private const val version = "2.1.2"
-            const val constraintlayout = "androidx.constraintlayout:constraintlayout:$version"
+            private const val version = "1.0.0-beta02"
+            const val constraintlayout = "androidx.constraintlayout:constraintlayout-compose:$version"
         }
 
         object Core {
