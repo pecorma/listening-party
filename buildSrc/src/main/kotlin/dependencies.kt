@@ -150,4 +150,14 @@ object Libs {
         const val serializationJson = "org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion"
     }
 
+    object TensorFlow {
+        private const val version = "2.2.0"
+        const val tensorFlow = "org.tensorflow:tensorflow-lite:$version"
+
+        private const val metaVersion = "0.3.0"
+        const val metaData = "org.tensorflow:tensorflow-lite-metadata:$metaVersion"
+        const val taskText = "org.tensorflow:tensorflow-lite-task-text:$metaVersion"
+        const val delegatePlugin = "org.tensorflow:tensorflow-lite-gpu-delegate-plugin:$metaVersion"
+    }
+
 }

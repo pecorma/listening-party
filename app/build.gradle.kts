@@ -92,6 +92,8 @@ fun isNonStable(version: String): Boolean {
 
 dependencies {
     implementation(fileTree("../libs"))
+    implementation(project(":sentiment"))
+
     implementation(Libs.Kotlin.stdLib)
     implementation(Libs.AndroidX.Core.ktx)
     implementation(Libs.AndroidX.AppCompat.appcompat)
