@@ -77,14 +77,30 @@ android {
     allprojects {
         tasks.withType<DependencyUpdatesTask> {
             rejectVersionIf {
-                isNonStable(this.candidate.version)
+                isNonStable(this.candidate.version) &&
+                        isNonOmittedCandidate(this.candidate.displayName).not()
             }
         }
     }
 }
 
+fun isNonOmittedCandidate(displayName: String): Boolean {
+    return listOf(
+        "paging-compose",
+        "hilt-navigation-compose",
+        "navigation-compose",
+        "constraintlayout-compose",
+        "accompanist-navigation-animation",
+
+    ).any {
+        displayName.toLowerCase().contains(it)
+    }
+}
+
 fun isNonStable(version: String): Boolean {
-    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.toUpperCase().contains(it) }
+    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any {
+        version.toUpperCase().contains(it)
+    }
     val regex = "^[0-9,.v-]+(-r)?$".toRegex()
     val isStable = stableKeyword || regex.matches(version)
     return isStable.not()

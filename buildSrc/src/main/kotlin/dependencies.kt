@@ -28,7 +28,7 @@ object Libs {
         }
 
         object ConstraintLayout {
-            private const val version = "1.0.0-beta02"
+            private const val version = "1.0.0-rc02"
             const val constraintlayout = "androidx.constraintlayout:constraintlayout-compose:$version"
         }
 
@@ -42,7 +42,7 @@ object Libs {
             const val hiltAndroid = "com.google.dagger:hilt-android:$hiltVersion"
             const val compiler = "com.google.dagger:hilt-android-compiler:$hiltVersion"
 
-            private const val navigationVersion = "1.0.0-alpha03"
+            private const val navigationVersion = "1.0.0-rc01"
             const val composeNavigation = "androidx.hilt:hilt-navigation-compose:$navigationVersion"
         }
 
