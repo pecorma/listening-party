@@ -1,6 +1,8 @@
 package com.mjpecora.listeningparty.ui.createaccount
 
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.base.ViewModel
@@ -30,34 +32,19 @@ class CreateAccountViewModel @Inject constructor(
         )
         firebaseAuth
             .createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener { auth ->
-                auth.user?.uid?.let { uid ->
-                    val user = User(userName, email, uid)
-                    viewModelScope.launch {
-                        remoteUserRepository.writeNewUser(user)
-                            .addOnSuccessListener {
-                                viewModelScope.launch {
-                                    withContext(Dispatchers.Main) {
-                                        userDao.insertUser(user)
-                                    }
-                                    navigate(Navigator.NavTarget.Route(Screen.Home.route))
-                                }
-                            }
-                            .addOnFailureListener {
-                                viewModelScope.launch {
-                                    viewState.emit(
-                                        CreateAccountViewState(
-                                            false,
-                                            viewState.value.createAccount.copy(
-                                                isUserNameError = true
-                                            )
-                                        )
-                                    )
-                                }
-                            }
-                    }
+            .createAccountListeners(userName, email)
+
+    }
+
+    private fun Task<AuthResult>.createAccountListeners(userName: String, email: String) {
+        this.addOnSuccessListener { auth ->
+            auth.user?.uid?.let { uid ->
+                val user = User(userName, email, uid)
+                viewModelScope.launch {
+                    remoteUserRepository.writeNewUser(user).writeNewUserListeners(user)
                 }
             }
+        }
             .addOnFailureListener {
                 viewModelScope.launch {
                     when (it.message) {
@@ -73,6 +60,29 @@ class CreateAccountViewModel @Inject constructor(
                     }
                 }
             }
+    }
+
+    private fun Task<Void>.writeNewUserListeners(user: User) {
+        this.addOnSuccessListener {
+            viewModelScope.launch {
+                withContext(Dispatchers.Main) {
+                    userDao.insertUser(user)
+                }
+                navigate(Navigator.NavTarget.Route(Screen.Home.route))
+            }
+        }
+        .addOnFailureListener {
+            viewModelScope.launch {
+                viewState.emit(
+                    CreateAccountViewState(
+                        false,
+                        viewState.value.createAccount.copy(
+                            isUserNameError = true
+                        )
+                    )
+                )
+            }
+        }
     }
 
 }

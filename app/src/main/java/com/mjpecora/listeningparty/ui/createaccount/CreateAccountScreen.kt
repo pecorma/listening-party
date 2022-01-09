@@ -212,42 +212,54 @@ private fun CreateAccountInputField(
     val isTinted = rememberSaveable { mutableStateOf(false) }
     val isVisible = rememberSaveable { mutableStateOf(false) }
 
-    OutlinedTextField(
-        value = textState.value.input,
-        onValueChange = {
-            textState.value = textState.value.copy(input = it, isError = false)
-        },
-        textStyle = MaterialTheme.typography.body1,
-        placeholder = { Text(placeHolder) },
-        singleLine = true,
-        colors = TextFieldDefaults
-            .textFieldColors(
-                textColor = Color.White,
-                placeholderColor = Color.White,
-                backgroundColor = Color.Transparent
-            ),
-        leadingIcon = {
-            Icon(leadingIcon, "", tint = if (isTinted.value) { Blue200 } else { Color.White })
-        },
-        isError = textState.value.isError,
-        trailingIcon = {
-            if (keyboardOptions.keyboardType == KeyboardType.Password) {
-                Icon(
-                    if (isVisible.value) { eyeOpenIcon } else { eyeClosedIcon },
-                    "",
-                    tint = if (isTinted.value) { Blue200 } else { Color.White },
-                    modifier = Modifier
-                        .clickable(
-                            interactionSource = MutableInteractionSource(),
-                            indication = null
-                        ) { isVisible.value = isVisible.value.not() }
-                )
-            }
-        },
-        keyboardOptions = keyboardOptions,
-        modifier = Modifier
-            .fillMaxWidth()
-            .onFocusChanged { isTinted.value = it.hasFocus }
-            .then(modifier)
-    )
+    Column(modifier) {
+        OutlinedTextField(
+            value = textState.value.input,
+            onValueChange = {
+                textState.value = textState.value.copy(input = it, isError = false)
+            },
+            textStyle = MaterialTheme.typography.body1,
+            placeholder = { Text(placeHolder) },
+            singleLine = true,
+            colors = TextFieldDefaults
+                .textFieldColors(
+                    textColor = Color.White,
+                    placeholderColor = Color.White,
+                    backgroundColor = Color.Transparent
+                ),
+            leadingIcon = {
+                Icon(leadingIcon, "", tint = if (isTinted.value) { Blue200 } else { Color.White })
+            },
+            isError = textState.value.isError,
+            trailingIcon = {
+                if (keyboardOptions.keyboardType == KeyboardType.Password) {
+                    Icon(
+                        if (isVisible.value) { eyeOpenIcon } else { eyeClosedIcon },
+                        "",
+                        tint = if (isTinted.value) { Blue200 } else { Color.White },
+                        modifier = Modifier
+                            .clickable(
+                                interactionSource = MutableInteractionSource(),
+                                indication = null
+                            ) { isVisible.value = isVisible.value.not() }
+                    )
+                }
+            },
+            keyboardOptions = keyboardOptions,
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged { isTinted.value = it.hasFocus }
+        )
+        if (textState.value.isError) {
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text ="There was an error.",
+                style = MaterialTheme.typography.caption,
+                color = MaterialTheme.colors.error,
+                modifier = modifier
+            )
+        }
+    }
+
+
 }
