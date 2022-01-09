@@ -8,22 +8,27 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.insets.systemBarsPadding
 import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.ui.theme.Blue
@@ -33,6 +38,11 @@ import com.mjpecora.listeningparty.util.ui.AutoSizeText
 
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel) {
+    val userName = remember { mutableStateOf<String?>(null) }
+    val email = remember { mutableStateOf<String?>(null) }
+    val user = viewModel.userStateFlow.collectAsState()
+    userName.value = user.value?.userName
+    email.value = user.value?.email
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -47,7 +57,18 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
             TopNavigation(viewModel = viewModel)
             Spacer(modifier = Modifier.height(32.dp))
             UserImage()
-            SignOutButton(viewModel = viewModel)
+            Spacer(modifier = Modifier.height(48.dp))
+            ProfileInputField(
+                label = "username",
+                input = userName
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            ProfileInputField(
+                label = "email",
+                input = email,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            )
+            SignOutButton(viewModel = viewModel, modifier = Modifier.align(Alignment.Start))
         }
     }
 }
@@ -69,7 +90,7 @@ private fun UserImage() {
 }
 
 @Composable
-private fun SignOutButton(viewModel: ProfileViewModel) {
+private fun SignOutButton(viewModel: ProfileViewModel, modifier: Modifier = Modifier) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -78,7 +99,7 @@ private fun SignOutButton(viewModel: ProfileViewModel) {
         text = "Sign out",
         style = MaterialTheme.typography.overline,
         color = if (isPressed) Blue else { Blue200 },
-        modifier = Modifier
+        modifier = modifier
             .clickable(interactionSource = interactionSource, indication = null) {
                 viewModel.signOut(context)
             }
@@ -103,6 +124,21 @@ private fun TopNavigation(viewModel: ProfileViewModel) {
     }
 }
 
-@Preview
 @Composable
-fun Preview() = ProfileScreen(viewModel = hiltViewModel())
+private fun ProfileInputField(
+    modifier: Modifier = Modifier,
+    label: String,
+    input: MutableState<String?>,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    maxLines: Int = 1
+) {
+    OutlinedTextField(
+        modifier = modifier.fillMaxWidth(),
+        value = input.value ?: "",
+        onValueChange = { input.value = it },
+        shape = RoundedCornerShape(8.dp),
+        maxLines = maxLines,
+        keyboardOptions = keyboardOptions,
+        label = { Text(text = label) }
+    )
+}

@@ -28,7 +28,6 @@ import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun LPApp(appState: ListeningPartyAppState) {
-    Test().invoke(LocalContext.current, "This movie was wank!")
     LaunchedEffect("navigation") {
         appState.navigator.sharedFlow.onEach {
             when (it) {

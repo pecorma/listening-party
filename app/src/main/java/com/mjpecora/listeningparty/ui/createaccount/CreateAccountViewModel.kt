@@ -30,7 +30,7 @@ class CreateAccountViewModel @Inject constructor(
             .addOnSuccessListener {
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
-                        userDao.insertUser(User(userName = userName))
+                        userDao.insertUser(User(userName = userName, email = email))
                     }
                     navigate(Navigator.NavTarget.Route(Screen.Home.route))
                 }

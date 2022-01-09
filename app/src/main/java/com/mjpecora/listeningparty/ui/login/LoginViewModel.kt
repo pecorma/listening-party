@@ -9,6 +9,8 @@ import com.google.firebase.ktx.Firebase
 import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.base.ViewModel
 import com.mjpecora.listeningparty.base.ViewState
+import com.mjpecora.listeningparty.model.cache.User
+import com.mjpecora.listeningparty.model.cache.UserDao
 import com.mjpecora.listeningparty.ui.Screen
 import com.mjpecora.listeningparty.util.tag
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val userDao: UserDao
 ) : ViewModel() {
 
     val viewState = MutableStateFlow<LoginViewState>(LoginViewState.Idle)
@@ -40,7 +43,12 @@ class LoginViewModel @Inject constructor(
     fun signInWithEmailPassword(email: String, password: String) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                navigate(Navigator.NavTarget.Route(Screen.Home.route))
+                viewModelScope.launch {
+                    withContext(viewModelScope.coroutineContext) {
+                        userDao.insertUser(User("__le", email))
+                    }
+                    navigate(Navigator.NavTarget.Route(Screen.Home.route))
+                }
             }
     }
 
