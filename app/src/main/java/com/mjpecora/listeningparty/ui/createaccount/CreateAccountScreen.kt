@@ -32,7 +32,7 @@ fun CreateAccountScreen(
     CreateAccountView(viewModel = viewModel)
 }
 
-data class InputFieldState(var input: String = "", val isError: Boolean = false)
+data class InputFieldState(var input: String = "", val error: String? = null)
 
 @Composable
 private fun CreateAccountView(
@@ -43,13 +43,13 @@ private fun CreateAccountView(
     val usernameState = remember { mutableStateOf(InputFieldState()) }
     val viewState = viewModel.viewState.collectAsState()
     emailState.value = viewState.value.createAccount.let {
-        InputFieldState(it.email, it.isEmailError)
+        InputFieldState(it.email, it.emailError)
     }
     passwordState.value = viewState.value.createAccount.let {
-        InputFieldState(it.password, it.isPasswordError)
+        InputFieldState(it.password, it.passwordError)
     }
     usernameState.value = viewState.value.createAccount.let {
-        InputFieldState(it.userName, it.isUserNameError)
+        InputFieldState(it.userName, it.userNameError)
     }
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -216,7 +216,7 @@ private fun CreateAccountInputField(
         OutlinedTextField(
             value = textState.value.input,
             onValueChange = {
-                textState.value = textState.value.copy(input = it, isError = false)
+                textState.value = textState.value.copy(input = it, error = null)
             },
             textStyle = MaterialTheme.typography.body1,
             placeholder = { Text(placeHolder) },
@@ -230,7 +230,7 @@ private fun CreateAccountInputField(
             leadingIcon = {
                 Icon(leadingIcon, "", tint = if (isTinted.value) { Blue200 } else { Color.White })
             },
-            isError = textState.value.isError,
+            isError = textState.value.error != null,
             trailingIcon = {
                 if (keyboardOptions.keyboardType == KeyboardType.Password) {
                     Icon(
@@ -250,10 +250,10 @@ private fun CreateAccountInputField(
                 .fillMaxWidth()
                 .onFocusChanged { isTinted.value = it.hasFocus }
         )
-        if (textState.value.isError) {
+        textState.value.error?.let {
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text ="There was an error.",
+                text = it,
                 style = MaterialTheme.typography.caption,
                 color = MaterialTheme.colors.error,
                 modifier = modifier

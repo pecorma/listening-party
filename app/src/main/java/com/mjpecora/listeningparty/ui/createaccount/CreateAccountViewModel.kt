@@ -48,12 +48,12 @@ class CreateAccountViewModel @Inject constructor(
             .addOnFailureListener {
                 viewModelScope.launch {
                     when (it.message) {
-                        FirebaseAuthErrors.INVALID_EMAIL.message ->
+                        FirebaseAuthErrors.INVALID_EMAIL.responseMessage ->
                             viewState.emit(
                                 CreateAccountViewState(
                                     false,
                                     viewState.value.createAccount.copy(
-                                        isEmailError = true,
+                                        emailError = FirebaseAuthErrors.INVALID_EMAIL.errorMessage,
                                     )
                                 )
                             )
@@ -77,7 +77,7 @@ class CreateAccountViewModel @Inject constructor(
                     CreateAccountViewState(
                         false,
                         viewState.value.createAccount.copy(
-                            isUserNameError = true
+                            userNameError = "user name is taken"
                         )
                     )
                 )
@@ -87,8 +87,11 @@ class CreateAccountViewModel @Inject constructor(
 
 }
 
-enum class FirebaseAuthErrors(val message: String) {
-    INVALID_EMAIL("The email address is badly formatted.")
+enum class FirebaseAuthErrors(val responseMessage: String, val errorMessage: String) {
+    INVALID_EMAIL(
+        "The email address is badly formatted.",
+        "invalid email address"
+    )
 }
 
 data class CreateAccountViewState(
@@ -100,9 +103,9 @@ data class CreateAccountInput(
     val email: String,
     val password: String,
     val userName: String,
-    val isEmailError: Boolean = false,
-    val isPasswordError: Boolean = false,
-    val isUserNameError: Boolean = false
+    val emailError: String? = null,
+    val passwordError: String? = null,
+    val userNameError: String? = null
 ) {
     companion object {
         fun idle() = CreateAccountInput("", "", "")
