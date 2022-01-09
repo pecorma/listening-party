@@ -105,6 +105,7 @@ object Libs {
         private const val version = "29.0.3"
         const val bom = "com.google.firebase:firebase-bom:$version"
         const val auth = "com.google.firebase:firebase-auth-ktx"
+        const val database = "com.google.firebase:firebase-database-ktx"
 
         const val authUi = "com.firebaseui:firebase-ui-auth:8.0.0"
     }

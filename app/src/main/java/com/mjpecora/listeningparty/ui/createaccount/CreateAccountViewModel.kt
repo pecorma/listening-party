@@ -1,5 +1,6 @@
 package com.mjpecora.listeningparty.ui.createaccount
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.mjpecora.listeningparty.base.Navigator
@@ -7,6 +8,7 @@ import com.mjpecora.listeningparty.base.ViewModel
 import com.mjpecora.listeningparty.base.ViewState
 import com.mjpecora.listeningparty.model.cache.User
 import com.mjpecora.listeningparty.model.cache.UserDao
+import com.mjpecora.listeningparty.repository.RemoteUserRepository
 import com.mjpecora.listeningparty.ui.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateAccountViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val userDao: UserDao
+    private val userDao: UserDao,
+    private val remoteUserRepository: RemoteUserRepository
 ) : ViewModel() {
 
     val viewState = MutableStateFlow<CreateAccountViewState>(CreateAccountViewState.Idle)
@@ -28,11 +31,19 @@ class CreateAccountViewModel @Inject constructor(
         firebaseAuth
             .createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                viewModelScope.launch {
-                    withContext(Dispatchers.IO) {
-                        userDao.insertUser(User(userName = userName, email = email))
+                it.user?.uid?.let {
+                    val user = User(userName, email, it)
+                    viewModelScope.launch {
+                        remoteUserRepository.writeNewUser(user)
+                            .addOnSuccessListener {
+                                viewModelScope.launch {
+                                    withContext(Dispatchers.Main) {
+                                        userDao.insertUser(user)
+                                    }
+                                    navigate(Navigator.NavTarget.Route(Screen.Home.route))
+                                }
+                            }
                     }
-                    navigate(Navigator.NavTarget.Route(Screen.Home.route))
                 }
             }
     }

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 data class User(
     val userName: String,
     val email: String,
-    @PrimaryKey @ColumnInfo(name = "id") val id: Int = 1,
+    @PrimaryKey @ColumnInfo(name = "id") val id: String,
 )
 
 @Dao

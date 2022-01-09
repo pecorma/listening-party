@@ -155,6 +155,7 @@ dependencies {
     implementation(Libs.ML.textRecognition)
 
     implementation(platform(Libs.Firebase.bom))
+    implementation(Libs.Firebase.database)
     implementation(Libs.Firebase.auth)
     implementation(Libs.Google.auth)
     implementation(Libs.Firebase.authUi)

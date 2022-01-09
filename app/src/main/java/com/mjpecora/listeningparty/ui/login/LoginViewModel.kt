@@ -5,12 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.base.ViewModel
 import com.mjpecora.listeningparty.base.ViewState
 import com.mjpecora.listeningparty.model.cache.User
 import com.mjpecora.listeningparty.model.cache.UserDao
+import com.mjpecora.listeningparty.repository.RemoteUserRepository
 import com.mjpecora.listeningparty.ui.Screen
 import com.mjpecora.listeningparty.util.tag
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val userDao: UserDao
+    private val userDao: UserDao,
+    private val userRemoteRepository: RemoteUserRepository
 ) : ViewModel() {
 
     val viewState = MutableStateFlow<LoginViewState>(LoginViewState.Idle)
@@ -44,17 +50,15 @@ class LoginViewModel @Inject constructor(
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
                 viewModelScope.launch {
-                    withContext(viewModelScope.coroutineContext) {
-                        userDao.insertUser(User("__le", email))
-                    }
-                    navigate(Navigator.NavTarget.Route(Screen.Home.route))
+                    userRemoteRepository.getUser(email)
+                        .addOnSuccessListener {
+                            navigate(Navigator.NavTarget.Route(Screen.Home.route))
+                        }
                 }
             }
     }
 
-    private fun updateViewState(viewState: LoginViewState) = viewModelScope.launch {
-        this@LoginViewModel.viewState.emit(viewState)
-    }
+
 
 }
 

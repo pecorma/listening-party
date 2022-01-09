@@ -1,6 +1,9 @@
 package com.mjpecora.listeningparty.di
 
 import android.content.Context
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.mjpecora.listeningparty.model.cache.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -12,6 +15,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object PersistenceModule {
+
+    @Provides
+    @Singleton
+    fun provideFirebaseDatabase(): DatabaseReference = Firebase.database.reference
 
     @Provides
     @Singleton
