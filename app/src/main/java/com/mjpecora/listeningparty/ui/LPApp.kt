@@ -10,14 +10,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.mjpecora.listeningparty.base.Navigator
-import com.mjpecora.listeningparty.sentiment.Test
 import com.mjpecora.listeningparty.ui.createaccount.CreateAccountScreen
 import com.mjpecora.listeningparty.ui.home.Home
 import com.mjpecora.listeningparty.ui.login.LoginScreen

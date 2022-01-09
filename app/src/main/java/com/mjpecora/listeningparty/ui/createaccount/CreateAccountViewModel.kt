@@ -1,6 +1,5 @@
 package com.mjpecora.listeningparty.ui.createaccount
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.mjpecora.listeningparty.base.Navigator
