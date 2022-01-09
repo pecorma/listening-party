@@ -19,6 +19,15 @@ class RemoteUserRepositoryImpl @Inject constructor(
             .setValue(user)
     }
 
+
+    private fun DataSnapshot.isUserNameTaken(user: User): Boolean {
+        return this.children.map {
+            it.getValue(User::class.java)
+        }.any {
+            user.userName == it?.userName
+        }
+    }
+
 }
 
 interface RemoteUserRepository {

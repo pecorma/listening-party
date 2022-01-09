@@ -1,8 +1,5 @@
 package com.mjpecora.listeningparty.ui.createaccount
 
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,15 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.systemBarsPadding
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.GoogleAuthProvider
 import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.ui.theme.*
 
@@ -37,25 +29,31 @@ import com.mjpecora.listeningparty.ui.theme.*
 fun CreateAccountScreen(
     viewModel: CreateAccountViewModel
 ) {
-    val viewState = viewModel.viewState.collectAsState()
-
-    CreateAccountView(viewModel = viewModel, viewState = viewState.value)
-
+    CreateAccountView(viewModel = viewModel)
 }
 
+data class InputFieldState(var input: String = "", val isError: Boolean = false)
 
 @Composable
 private fun CreateAccountView(
     viewModel: CreateAccountViewModel,
-    viewState: CreateAccountViewState
 ) {
+    val emailState = remember { mutableStateOf(InputFieldState()) }
+    val passwordState = remember { mutableStateOf(InputFieldState()) }
+    val usernameState = remember { mutableStateOf(InputFieldState()) }
+    val viewState = viewModel.viewState.collectAsState()
+    emailState.value = viewState.value.createAccount.let {
+        InputFieldState(it.email, it.isEmailError)
+    }
+    passwordState.value = viewState.value.createAccount.let {
+        InputFieldState(it.password, it.isPasswordError)
+    }
+    usernameState.value = viewState.value.createAccount.let {
+        InputFieldState(it.userName, it.isUserNameError)
+    }
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) {
-        val emailState = remember { mutableStateOf("") }
-        val passwordState = remember { mutableStateOf("") }
-        val usernameState = remember { mutableStateOf("") }
-
         Column(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top,
@@ -70,34 +68,38 @@ private fun CreateAccountView(
                 placeHolder = "email",
                 leadingIcon = mailIcon,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
-                textState = emailState
+                textState = emailState,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
             Spacer(Modifier.height(16.dp))
             CreateAccountInputField(
                 placeHolder = "password",
                 leadingIcon = lockIcon,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
-                textState = passwordState
+                textState = passwordState,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
             Spacer(Modifier.height(16.dp))
             CreateAccountInputField(
                 placeHolder = "username",
                 leadingIcon = userIcon,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Go),
-                textState = usernameState
+                textState = usernameState,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
             Spacer(Modifier.height(16.dp))
             SignUpButton(
                 viewModel,
-                viewState,
-                emailState.value.trim(),
-                passwordState.value.trim(),
-                usernameState.value.trim()
+                viewState.value,
+                emailState.value.input.trim(),
+                passwordState.value.input.trim(),
+                usernameState.value.input.trim(),
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
             Spacer(Modifier.height(48.dp))
-            OrWithDivider()
+            OrWithDivider(Modifier.padding(horizontal = 16.dp))
             Spacer(modifier = Modifier.height(32.dp))
-            GoogleSignUpButton(viewModel = viewModel)
+            GoogleSignUpButton(modifier = Modifier.padding(horizontal = 16.dp))
         }
     }
 }
@@ -108,9 +110,10 @@ private fun SignUpButton(
     viewState: CreateAccountViewState,
     email: String,
     password: String,
-    userName: String
+    userName: String,
+    modifier: Modifier = Modifier
 ) {
-    Row(modifier = Modifier.padding(horizontal = 16.dp)) {
+    Row(modifier = modifier) {
         Button(
             onClick = { viewModel.createUser(email, password, userName) },
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
@@ -125,7 +128,7 @@ private fun SignUpButton(
                     .fillMaxWidth()
                     .height(ButtonDefaults.MinHeight)
             ) {
-                if (viewState is CreateAccountViewState.Loading) {
+                if (viewState.isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(ButtonDefaults.MinHeight.times(0.9f))
                     )
@@ -138,29 +141,10 @@ private fun SignUpButton(
 }
 
 @Composable
-private fun GoogleSignUpButton(viewModel: CreateAccountViewModel) {
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) {
-        val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
-        try {
-            val account = task.getResult(ApiException::class.java)
-            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-            // TODO(): query [CreateAccountViewModel]
-        } catch (e: ApiException) {
-            Log.d("GoogleAuth", "failed to sign in")
-        }
-    }
-    val context = LocalContext.current
-    Row(modifier = Modifier.padding(horizontal = 16.dp)) {
+private fun GoogleSignUpButton(modifier: Modifier = Modifier) {
+    Row(modifier = modifier) {
         Button(
-            onClick = {
-                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken("17774155879-i64ne7v32pda7vatjupn9iiflg0a0i31.apps.googleusercontent.com")
-                    .requestEmail()
-                    .build()
-                val googleSignInClient = GoogleSignIn.getClient(context, gso)
-            },
+            onClick = {  },
             colors = ButtonDefaults.buttonColors(backgroundColor = Pink100),
             contentPadding = PaddingValues(),
             elevation = ButtonDefaults.elevation(4.dp),
@@ -183,11 +167,11 @@ private fun GoogleSignUpButton(viewModel: CreateAccountViewModel) {
 }
 
 @Composable
-private fun OrWithDivider() {
+private fun OrWithDivider(modifier: Modifier = Modifier) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .then(modifier),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -222,51 +206,48 @@ private fun CreateAccountInputField(
     placeHolder: String,
     leadingIcon: Painter,
     keyboardOptions: KeyboardOptions,
-    textState: MutableState<String>
+    textState: MutableState<InputFieldState>,
+    modifier: Modifier = Modifier
 ) {
     val isTinted = rememberSaveable { mutableStateOf(false) }
     val isVisible = rememberSaveable { mutableStateOf(false) }
-    Row(
+
+    OutlinedTextField(
+        value = textState.value.input,
+        onValueChange = {
+            textState.value = textState.value.copy(input = it, isError = false)
+        },
+        textStyle = MaterialTheme.typography.body1,
+        placeholder = { Text(placeHolder) },
+        singleLine = true,
+        colors = TextFieldDefaults
+            .textFieldColors(
+                textColor = Color.White,
+                placeholderColor = Color.White,
+                backgroundColor = Color.Transparent
+            ),
+        leadingIcon = {
+            Icon(leadingIcon, "", tint = if (isTinted.value) { Blue200 } else { Color.White })
+        },
+        isError = textState.value.isError,
+        trailingIcon = {
+            if (keyboardOptions.keyboardType == KeyboardType.Password) {
+                Icon(
+                    if (isVisible.value) { eyeOpenIcon } else { eyeClosedIcon },
+                    "",
+                    tint = if (isTinted.value) { Blue200 } else { Color.White },
+                    modifier = Modifier
+                        .clickable(
+                            interactionSource = MutableInteractionSource(),
+                            indication = null
+                        ) { isVisible.value = isVisible.value.not() }
+                )
+            }
+        },
+        keyboardOptions = keyboardOptions,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-    ) {
-        OutlinedTextField(
-            value = textState.value,
-            onValueChange = {
-                textState.value = it
-            },
-            textStyle = MaterialTheme.typography.body1,
-            placeholder = { Text(placeHolder) },
-            singleLine = true,
-            colors = TextFieldDefaults
-                .textFieldColors(
-                    textColor = Color.White,
-                    placeholderColor = Color.White,
-                    backgroundColor = Color.Transparent
-                ),
-            leadingIcon = {
-                androidx.compose.material.Icon(leadingIcon, "", tint = if (isTinted.value) { Blue200 } else { Color.White })
-            },
-            trailingIcon = {
-                if (keyboardOptions.keyboardType == KeyboardType.Password) {
-                    Icon(
-                        if (isVisible.value) { eyeOpenIcon } else { eyeClosedIcon },
-                        "",
-                        tint = if (isTinted.value) { Blue200 } else { Color.White },
-                        modifier = Modifier
-                            .clickable(
-                                interactionSource = MutableInteractionSource(),
-                                indication = null
-                            ) { isVisible.value = isVisible.value.not() }
-                    )
-                }
-            },
-            keyboardOptions = keyboardOptions,
-            modifier = Modifier
-                .fillMaxWidth()
-                .onFocusChanged { isTinted.value = it.hasFocus }
-        )
-    }
-
+            .onFocusChanged { isTinted.value = it.hasFocus }
+            .then(modifier)
+    )
 }

@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.base.ViewModel
-import com.mjpecora.listeningparty.base.ViewState
 import com.mjpecora.listeningparty.model.cache.User
 import com.mjpecora.listeningparty.model.cache.UserDao
 import com.mjpecora.listeningparty.repository.RemoteUserRepository
@@ -23,15 +22,17 @@ class CreateAccountViewModel @Inject constructor(
     private val remoteUserRepository: RemoteUserRepository
 ) : ViewModel() {
 
-    val viewState = MutableStateFlow<CreateAccountViewState>(CreateAccountViewState.Idle)
+    val viewState = MutableStateFlow(CreateAccountViewState())
 
     fun createUser(email: String, password: String, userName: String) = viewModelScope.launch {
-        viewState.emit(CreateAccountViewState.Loading)
+        viewState.emit(
+            CreateAccountViewState(true, CreateAccountInput(email, password, userName))
+        )
         firebaseAuth
             .createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener {
-                it.user?.uid?.let {
-                    val user = User(userName, email, it)
+            .addOnSuccessListener { auth ->
+                auth.user?.uid?.let { uid ->
+                    val user = User(userName, email, uid)
                     viewModelScope.launch {
                         remoteUserRepository.writeNewUser(user)
                             .addOnSuccessListener {
@@ -42,6 +43,33 @@ class CreateAccountViewModel @Inject constructor(
                                     navigate(Navigator.NavTarget.Route(Screen.Home.route))
                                 }
                             }
+                            .addOnFailureListener {
+                                viewModelScope.launch {
+                                    viewState.emit(
+                                        CreateAccountViewState(
+                                            false,
+                                            viewState.value.createAccount.copy(
+                                                isUserNameError = true
+                                            )
+                                        )
+                                    )
+                                }
+                            }
+                    }
+                }
+            }
+            .addOnFailureListener {
+                viewModelScope.launch {
+                    when (it.message) {
+                        FirebaseAuthErrors.INVALID_EMAIL.message ->
+                            viewState.emit(
+                                CreateAccountViewState(
+                                    false,
+                                    viewState.value.createAccount.copy(
+                                        isEmailError = true,
+                                    )
+                                )
+                            )
                     }
                 }
             }
@@ -49,8 +77,24 @@ class CreateAccountViewModel @Inject constructor(
 
 }
 
-sealed class CreateAccountViewState : ViewState {
-    object Loading : CreateAccountViewState()
-    object Idle : CreateAccountViewState()
-    object Success : CreateAccountViewState()
+enum class FirebaseAuthErrors(val message: String) {
+    INVALID_EMAIL("The email address is badly formatted.")
+}
+
+data class CreateAccountViewState(
+    val isLoading: Boolean = false,
+    val createAccount: CreateAccountInput = CreateAccountInput.idle()
+)
+
+data class CreateAccountInput(
+    val email: String,
+    val password: String,
+    val userName: String,
+    val isEmailError: Boolean = false,
+    val isPasswordError: Boolean = false,
+    val isUserNameError: Boolean = false
+) {
+    companion object {
+        fun idle() = CreateAccountInput("", "", "")
+    }
 }
