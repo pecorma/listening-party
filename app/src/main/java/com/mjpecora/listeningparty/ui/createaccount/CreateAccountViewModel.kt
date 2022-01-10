@@ -45,21 +45,21 @@ class CreateAccountViewModel @Inject constructor(
                 }
             }
         }
-            .addOnFailureListener {
-                viewModelScope.launch {
-                    when (it.message) {
-                        FirebaseAuthErrors.INVALID_EMAIL.responseMessage ->
-                            viewState.emit(
-                                CreateAccountViewState(
-                                    false,
-                                    viewState.value.createAccount.copy(
-                                        emailError = FirebaseAuthErrors.INVALID_EMAIL.errorMessage,
-                                    )
+        .addOnFailureListener {
+            viewModelScope.launch {
+                when (it.message) {
+                    FirebaseAuthErrors.INVALID_EMAIL.responseMessage ->
+                        viewState.emit(
+                            CreateAccountViewState(
+                                false,
+                                viewState.value.createAccount.copy(
+                                    emailError = "invalid email address",
                                 )
                             )
-                    }
+                        )
                 }
             }
+        }
     }
 
     private fun Task<Void>.writeNewUserListeners(user: User) {
@@ -87,12 +87,13 @@ class CreateAccountViewModel @Inject constructor(
 
 }
 
-enum class FirebaseAuthErrors(val responseMessage: String, val errorMessage: String) {
+enum class FirebaseAuthErrors(val responseMessage: String) {
     INVALID_EMAIL(
         "The email address is badly formatted.",
-        "invalid email address"
     )
 }
+
+
 
 data class CreateAccountViewState(
     val isLoading: Boolean = false,

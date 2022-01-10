@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.systemBarsPadding
 import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.ui.theme.*
+import com.mjpecora.listeningparty.util.isPasswordValid
 
 @Composable
 fun CreateAccountScreen(
@@ -79,6 +80,12 @@ private fun CreateAccountView(
                 textState = passwordState,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                "at least 8 characters",
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier.padding(start = 32.dp)
+            )
             Spacer(Modifier.height(16.dp))
             CreateAccountInputField(
                 placeHolder = "username",
@@ -116,6 +123,7 @@ private fun SignUpButton(
     Row(modifier = modifier) {
         Button(
             onClick = { viewModel.createUser(email, password, userName) },
+            enabled = password.isPasswordValid(),
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
             contentPadding = PaddingValues(),
             elevation = ButtonDefaults.elevation(4.dp),
