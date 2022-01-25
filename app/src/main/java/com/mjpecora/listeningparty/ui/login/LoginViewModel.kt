@@ -9,6 +9,7 @@ import com.google.firebase.ktx.Firebase
 import com.mjpecora.listeningparty.base.Navigator
 import com.mjpecora.listeningparty.base.ViewModel
 import com.mjpecora.listeningparty.base.ViewState
+import com.mjpecora.listeningparty.model.cache.User
 import com.mjpecora.listeningparty.model.cache.UserDao
 import com.mjpecora.listeningparty.repository.RemoteUserRepository
 import com.mjpecora.listeningparty.ui.Screen
@@ -45,16 +46,23 @@ class LoginViewModel @Inject constructor(
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
                 viewModelScope.launch {
-                    userRemoteRepository.getUser(email)
-                        .addOnSuccessListener {
-                            navigate(Navigator.NavTarget.Route(Screen.Home.route))
-                        }
+                    it.user?.uid?.let { uid ->
+                        userRemoteRepository.getUser(uid)
+                            .addOnSuccessListener {
+                                val user = it.getValue(User::class.java)
+                                if (user != null) {
+                                    viewModelScope.launch {
+                                        withContext(Dispatchers.IO) {
+                                            userDao.insertUser(user)
+                                        }
+                                    }
+                                }
+                                navigate(Navigator.NavTarget.Route(Screen.Home.route))
+                            }
+                    }
                 }
             }
     }
-
-
-
 }
 
 sealed class LoginViewState : ViewState {
